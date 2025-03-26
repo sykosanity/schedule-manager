@@ -1,2 +1,5 @@
 build
 /build
+/build/classes/Components
+/build/classes
+/build
