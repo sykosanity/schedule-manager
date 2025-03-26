@@ -110,7 +110,9 @@
         </Component>
         <Component class="javax.swing.JPasswordField" name="PasswordTxtField">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Passowrd"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="&quot;Password&quot;" type="code"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PasswordTxtFieldActionPerformed"/>

@@ -4,6 +4,8 @@ import Database.Database;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.themes.JMarsDarkTheme;
 
 public class Login extends javax.swing.JFrame {
 
@@ -11,6 +13,7 @@ public class Login extends javax.swing.JFrame {
         System.out.println("Initiated Login");
         initComponents();
         SetDefault();
+        applyCustomComponents();
 
         UsernameTxtField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -42,8 +45,8 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void SetDefault() {
-        setSize(1280, 720); 
-        setLocationRelativeTo(null); 
+        setSize(1280, 720);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -97,7 +100,7 @@ public class Login extends javax.swing.JFrame {
         LoginContainer.add(LoginButton);
         LoginButton.setBounds(30, 260, 210, 40);
 
-        PasswordTxtField.setText("Passowrd");
+        PasswordTxtField.setText("Password");
         PasswordTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PasswordTxtFieldActionPerformed(evt);
@@ -131,6 +134,7 @@ public class Login extends javax.swing.JFrame {
         }
 
         // validate login
+        Database.initDatabase(); // Fetch database records first
         boolean loginSuccessful = validateLogin(username, password);
 
         if (loginSuccessful) {
@@ -139,7 +143,7 @@ public class Login extends javax.swing.JFrame {
 
             if (userDetails != null) {
                 // close login 
-                this.dispose();              
+                this.dispose();
                 SwingUtilities.invokeLater(() -> {
 
                 });
@@ -154,11 +158,19 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_LoginButtonActionPerformed
 
     private boolean validateLogin(String username, String password) {
-        List<HashMap<String, String>> accounts = Database.getDatabase();
 
+        List<HashMap<String, String>> accounts = Database.getDatabase();
+       
         for (HashMap<String, String> account : accounts) {
-            if (account.containsKey("user_name") && account.containsKey("password")) {
-                if (account.get("user_name").equals(username) && account.get("password").equals(password)) {
+            
+            if (account.containsKey("user_name") && account.containsKey("user_password")) {
+                    System.out.println("ENTERED NAME: " + username);
+                    System.out.println("ENTERED PASSWORD: " + password);
+
+                    System.out.println(account.get("user_name"));
+                    System.out.println(account.get("user_password"));
+
+                if (account.get("user_name").equals(username) && account.get("user_password").equals(password)){
                     return true; // Login success
                 }
             }
@@ -188,7 +200,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_PasswordTxtFieldActionPerformed
 
     public static void main(String args[]) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+
+//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
@@ -209,12 +222,24 @@ public class Login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        try {
+            UIManager.setLookAndFeel(new MaterialLookAndFeel(new JMarsDarkTheme()));
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
+    }
+
+    public void applyCustomComponents() {
+        // Example: Customizing the JButton after NetBeans-generated code
+        LoginButton.setUI(new mdlaf.components.button.MaterialButtonUI());
+        LoginButton.setBackground(new java.awt.Color(33, 150, 243)); // Blue
+        LoginButton.setForeground(java.awt.Color.WHITE);
+        LoginButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        LoginButton.setBorderPainted(false);
+        LoginButton.setFocusPainted(false);
+        LoginButton.setOpaque(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
