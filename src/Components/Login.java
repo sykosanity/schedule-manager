@@ -22,9 +22,9 @@ public class Login extends javax.swing.JFrame {
 
         LoginContainer = new javax.swing.JPanel();
         LoginLogo = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        UsernameTxtField = new javax.swing.JTextField();
+        PasswordTxtField = new javax.swing.JTextField();
+        LoginButton = new javax.swing.JButton();
         BGImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -40,32 +40,31 @@ public class Login extends javax.swing.JFrame {
         LoginContainer.add(LoginLogo);
         LoginLogo.setBounds(30, 10, 210, 90);
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField3.setText("Enter Username/Id");
-        LoginContainer.add(jTextField3);
-        jTextField3.setBounds(30, 120, 210, 40);
+        UsernameTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        UsernameTxtField.setText("Enter Username/Id");
+        LoginContainer.add(UsernameTxtField);
+        UsernameTxtField.setBounds(30, 120, 210, 40);
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField2.setText("Enter Password");
-        LoginContainer.add(jTextField2);
-        jTextField2.setBounds(30, 190, 210, 40);
+        PasswordTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        PasswordTxtField.setText("Enter Password");
+        LoginContainer.add(PasswordTxtField);
+        PasswordTxtField.setBounds(30, 190, 210, 40);
 
-        jButton1.setBackground(new java.awt.Color(4, 75, 172));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Login");
-        jButton1.setToolTipText("");
-        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton1.setBorderPainted(false);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        LoginContainer.add(jButton1);
-        jButton1.setBounds(30, 260, 210, 40);
+        LoginButton.setBackground(new java.awt.Color(4, 75, 172));
+        LoginButton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        LoginButton.setForeground(new java.awt.Color(255, 255, 255));
+        LoginButton.setText("Login");
+        LoginButton.setToolTipText("");
+        LoginButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        LoginButton.setBorderPainted(false);
+        LoginButton.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        LoginContainer.add(LoginButton);
+        LoginButton.setBounds(30, 260, 210, 40);
 
         getContentPane().add(LoginContainer);
         LoginContainer.setBounds(500, 100, 270, 490);
 
         BGImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/Images/bgimage.png"))); // NOI18N
-        BGImage.setPreferredSize(new java.awt.Dimension(1280, 720));
         getContentPane().add(BGImage);
         BGImage.setBounds(0, 0, 1280, 720);
 
@@ -104,10 +103,10 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BGImage;
+    private javax.swing.JButton LoginButton;
     private javax.swing.JPanel LoginContainer;
     private javax.swing.JLabel LoginLogo;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField PasswordTxtField;
+    private javax.swing.JTextField UsernameTxtField;
     // End of variables declaration//GEN-END:variables
 }
