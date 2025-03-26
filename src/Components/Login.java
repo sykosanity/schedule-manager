@@ -1,11 +1,13 @@
 package Components;
 
 import Database.Database;
+import java.awt.Color;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.text.DefaultHighlighter;
 import mdlaf.MaterialLookAndFeel;
-import mdlaf.themes.JMarsDarkTheme;
+import mdlaf.themes.*;
 
 public class Login extends javax.swing.JFrame {
 
@@ -76,6 +78,7 @@ public class Login extends javax.swing.JFrame {
 
         UsernameTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         UsernameTxtField.setText("Enter Username/Id");
+        UsernameTxtField.setSelectionColor(new java.awt.Color(4, 75, 172));
         UsernameTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 UsernameTxtFieldActionPerformed(evt);
@@ -101,6 +104,7 @@ public class Login extends javax.swing.JFrame {
         LoginButton.setBounds(30, 260, 210, 40);
 
         PasswordTxtField.setText("Password");
+        PasswordTxtField.setSelectionColor(new java.awt.Color(4, 75, 172));
         PasswordTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PasswordTxtFieldActionPerformed(evt);
@@ -117,6 +121,7 @@ public class Login extends javax.swing.JFrame {
         BGImage.setBounds(0, 0, 1280, 720);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
@@ -160,17 +165,18 @@ public class Login extends javax.swing.JFrame {
     private boolean validateLogin(String username, String password) {
 
         List<HashMap<String, String>> accounts = Database.getDatabase();
-       
+
         for (HashMap<String, String> account : accounts) {
-            
+
             if (account.containsKey("user_name") && account.containsKey("user_password")) {
-                    System.out.println("ENTERED NAME: " + username);
-                    System.out.println("ENTERED PASSWORD: " + password);
 
-                    System.out.println(account.get("user_name"));
-                    System.out.println(account.get("user_password"));
+                System.out.println("ENTERED NAME: " + username);
+                System.out.println("ENTERED PASSWORD: " + password);
 
-                if (account.get("user_name").equals(username) && account.get("user_password").equals(password)){
+                System.out.println(account.get("user_name"));
+                System.out.println(account.get("user_password"));
+
+                if (account.get("user_name").equals(username) && account.get("user_password").equals(password)) {
                     return true; // Login success
                 }
             }
@@ -200,34 +206,6 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_PasswordTxtFieldActionPerformed
 
     public static void main(String args[]) {
-
-//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        try {
-            UIManager.setLookAndFeel(new MaterialLookAndFeel(new JMarsDarkTheme()));
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-
         java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
     }
 
@@ -240,6 +218,23 @@ public class Login extends javax.swing.JFrame {
         LoginButton.setBorderPainted(false);
         LoginButton.setFocusPainted(false);
         LoginButton.setOpaque(true);
+
+        UsernameTxtField.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)); // Custom font
+        UsernameTxtField.setForeground(new java.awt.Color(0, 0, 0)); 
+        UsernameTxtField.setBackground(new java.awt.Color(230, 230, 230)); // Light gray background
+        UsernameTxtField.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(4, 75, 172)));
+        UsernameTxtField.setCaretColor(new java.awt.Color(0, 0, 0)); 
+        UsernameTxtField.setHorizontalAlignment(javax.swing.JTextField.CENTER); // Center text
+        UsernameTxtField.setOpaque(true);
+
+        PasswordTxtField.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)); // Custom font
+        PasswordTxtField.setForeground(new java.awt.Color(0, 0, 0)); // Blue text color
+        PasswordTxtField.setBackground(new java.awt.Color(230, 230, 230)); // Light gray background
+        PasswordTxtField.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(4, 75, 172)));
+        PasswordTxtField.setCaretColor(new java.awt.Color(0, 0, 0)); // Blue cursor
+        PasswordTxtField.setHorizontalAlignment(javax.swing.JTextField.CENTER); // Center text
+        PasswordTxtField.setOpaque(true);
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
