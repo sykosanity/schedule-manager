@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.sql.*;
 
 public class Database {
+
     public static List<HashMap<String, String>> dbAccounts = new ArrayList<>();
 
     public static void initDatabase() {
@@ -28,6 +29,11 @@ public class Database {
                 userData.put("permissions", resultSet.getString("permissions").trim());
 
                 dbAccounts.add(userData); // Store user data in the list
+            }
+            // ✅ Debugging: Print fetched data
+            System.out.println("Database fetched accounts:");
+            for (HashMap<String, String> user : dbAccounts) {
+                System.out.println(user);
             }
 
         } catch (Exception e) {
