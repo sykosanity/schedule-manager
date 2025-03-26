@@ -160,6 +160,9 @@ public class Login extends javax.swing.JFrame {
                     "Login Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+        Dashboard displayDash = new Dashboard();
+        displayDash.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_LoginButtonActionPerformed
 
     private boolean validateLogin(String username, String password) {
@@ -182,6 +185,7 @@ public class Login extends javax.swing.JFrame {
             }
         }
         return false; // Login failure
+        
     }
 
     // user details
