@@ -1,14 +1,9 @@
 package Components;
 
 import Database.Database;
-import java.awt.Color;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.text.DefaultHighlighter;
-import mdlaf.MaterialLookAndFeel;
-import mdlaf.themes.*;
-import com.formdev.flatlaf.FlatLightLaf;
 
 public class Login extends javax.swing.JFrame {
 
@@ -133,7 +128,7 @@ public class Login extends javax.swing.JFrame {
 
         // innput validation
         if (username.isEmpty() || password.isEmpty()) {
-            
+
             UIManager.put("Button.focusPainted", false); // Disable focus ring
             UIManager.put("OptionPane.background", new java.awt.Color(255, 255, 255)); // Light gray background
             UIManager.put("Panel.background", new java.awt.Color(255, 255, 255)); // Panel background
@@ -153,6 +148,9 @@ public class Login extends javax.swing.JFrame {
         boolean loginSuccessful = validateLogin(username, password);
 
         if (loginSuccessful) {
+            Table dashboard = new Table();
+            dashboard.setVisible(true);
+            this.dispose();
             // find users
             HashMap<String, String> userDetails = getUserDetails(username);
 
@@ -171,9 +169,6 @@ public class Login extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Table displayDash = new Table();
-        displayDash.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_LoginButtonActionPerformed
 
     private boolean validateLogin(String username, String password) {
