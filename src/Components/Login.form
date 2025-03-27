@@ -115,9 +115,6 @@
         </Component>
         <Component class="javax.swing.JPasswordField" name="PasswordTxtField">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="&quot;Password&quot;" type="code"/>
-            </Property>
             <Property name="selectionColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ac" green="4b" red="4" type="rgb"/>
             </Property>

@@ -106,7 +106,6 @@ public class Login extends javax.swing.JFrame {
         LoginContainer.add(LoginButton);
         LoginButton.setBounds(30, 260, 210, 40);
 
-        PasswordTxtField.setText("Password");
         PasswordTxtField.setSelectionColor(new java.awt.Color(4, 75, 172));
         PasswordTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
