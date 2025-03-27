@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.text.DefaultHighlighter;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.*;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class Login extends javax.swing.JFrame {
 
@@ -64,6 +65,8 @@ public class Login extends javax.swing.JFrame {
         BGImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        setOpacity(0.95F);
         getContentPane().setLayout(null);
 
         LoginContainer.setBackground(new java.awt.Color(255, 255, 255, 220));
@@ -131,10 +134,18 @@ public class Login extends javax.swing.JFrame {
 
         // innput validation
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter both username and password",
-                    "Login Error",
-                    JOptionPane.ERROR_MESSAGE);
+            
+            UIManager.put("Button.focusPainted", false); // Disable focus ring
+            UIManager.put("OptionPane.background", new java.awt.Color(255, 255, 255)); // Light gray background
+            UIManager.put("Panel.background", new java.awt.Color(255, 255, 255)); // Panel background
+            UIManager.put("OptionPane.messageForeground", new java.awt.Color(0, 0, 0)); // Black text
+            UIManager.put("Button.background", new java.awt.Color(33, 150, 243)); // Blue button
+            UIManager.put("Button.foreground", java.awt.Color.WHITE); // White text on button
+            UIManager.put("Button.borderPainted", false);
+            UIManager.put("Button.focusPainted", false);
+            UIManager.put("Button.font", new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+
+            JOptionPane.showMessageDialog(this, "Please enter both username and password", "Login Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -159,6 +170,7 @@ public class Login extends javax.swing.JFrame {
                     "Invalid username or password",
                     "Login Error",
                     JOptionPane.ERROR_MESSAGE);
+            return;
         }
         Dashboard displayDash = new Dashboard();
         displayDash.setVisible(true);
@@ -185,7 +197,7 @@ public class Login extends javax.swing.JFrame {
             }
         }
         return false; // Login failure
-        
+
     }
 
     // user details
@@ -214,7 +226,8 @@ public class Login extends javax.swing.JFrame {
     }
 
     public void applyCustomComponents() {
-        // Example: Customizing the JButton after NetBeans-generated code
+
+        // Example: Customizing the UI after NetBeans-generated code
         LoginButton.setUI(new mdlaf.components.button.MaterialButtonUI());
         LoginButton.setBackground(new java.awt.Color(33, 150, 243)); // Blue
         LoginButton.setForeground(java.awt.Color.WHITE);
@@ -224,10 +237,10 @@ public class Login extends javax.swing.JFrame {
         LoginButton.setOpaque(true);
 
         UsernameTxtField.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)); // Custom font
-        UsernameTxtField.setForeground(new java.awt.Color(0, 0, 0)); 
+        UsernameTxtField.setForeground(new java.awt.Color(0, 0, 0));
         UsernameTxtField.setBackground(new java.awt.Color(230, 230, 230)); // Light gray background
         UsernameTxtField.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(4, 75, 172)));
-        UsernameTxtField.setCaretColor(new java.awt.Color(0, 0, 0)); 
+        UsernameTxtField.setCaretColor(new java.awt.Color(0, 0, 0));
         UsernameTxtField.setHorizontalAlignment(javax.swing.JTextField.CENTER); // Center text
         UsernameTxtField.setOpaque(true);
 
