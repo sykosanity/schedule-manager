@@ -172,7 +172,7 @@ public class Login extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Dashboard displayDash = new Dashboard();
+        Table displayDash = new Table();
         displayDash.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_LoginButtonActionPerformed

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
-public class Dashboard extends javax.swing.JFrame {
+public class Table extends javax.swing.JFrame {
 
     private void dashboardDisplay() {
         DefaultTableModel model = (DefaultTableModel) DashboardTable.getModel();
@@ -31,7 +31,7 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
 
-    public Dashboard() {
+    public Table() {
         initComponents();
         dashboardDisplay();
         DashboardTable.setDefaultRenderer(Object.class, new GradientCell());
@@ -119,7 +119,7 @@ public class Dashboard extends javax.swing.JFrame {
         FlatMacDarkLaf.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Dashboard().setVisible(true);
+                new Table().setVisible(true);
             }
         });
     }
