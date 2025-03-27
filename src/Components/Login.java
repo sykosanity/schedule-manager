@@ -4,6 +4,8 @@ import Database.Database;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class Login extends javax.swing.JFrame {
 
@@ -12,34 +14,6 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         SetDefault();
         applyCustomComponents();
-
-        UsernameTxtField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (UsernameTxtField.getText().equals("Enter Username/Id")) {
-                    UsernameTxtField.setText("");
-                }
-            }
-
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (UsernameTxtField.getText().isEmpty()) {
-                    UsernameTxtField.setText("Enter Username/Id");
-                }
-            }
-        });
-
-        PasswordTxtField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (new String(PasswordTxtField.getPassword()).equals("Enter Password")) {
-                    PasswordTxtField.setText("");
-                }
-            }
-
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (new String(PasswordTxtField.getPassword()).isEmpty()) {
-                    PasswordTxtField.setText("Enter Password");
-                }
-            }
-        });
     }
 
     public void SetDefault() {
@@ -75,7 +49,6 @@ public class Login extends javax.swing.JFrame {
         LoginLogo.setBounds(30, 10, 210, 90);
 
         UsernameTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        UsernameTxtField.setText("Enter Username/Id");
         UsernameTxtField.setSelectionColor(new java.awt.Color(4, 75, 172));
         UsernameTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,6 +189,12 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_PasswordTxtFieldActionPerformed
 
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf()); // Apply FlatLaf
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize FlatLaf");
+        }
+
         java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
     }
 
@@ -237,6 +216,10 @@ public class Login extends javax.swing.JFrame {
         UsernameTxtField.setCaretColor(new java.awt.Color(0, 0, 0));
         UsernameTxtField.setHorizontalAlignment(javax.swing.JTextField.CENTER); // Center text
         UsernameTxtField.setOpaque(true);
+        UsernameTxtField.putClientProperty(FlatClientProperties.STYLE, ""
+                + "iconTextGap:10;");
+        UsernameTxtField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Enter your email");
+        UsernameTxtField.putClientProperty("JTextField.placeholderText", "Enter Username");
 
         PasswordTxtField.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)); // Custom font
         PasswordTxtField.setForeground(new java.awt.Color(0, 0, 0)); // Blue text color
@@ -245,6 +228,10 @@ public class Login extends javax.swing.JFrame {
         PasswordTxtField.setCaretColor(new java.awt.Color(0, 0, 0)); // Blue cursor
         PasswordTxtField.setHorizontalAlignment(javax.swing.JTextField.CENTER); // Center text
         PasswordTxtField.setOpaque(true);
+        PasswordTxtField.putClientProperty(FlatClientProperties.STYLE, ""
+                + "iconTextGap:20;"
+                + "showRevealButton:true;");
+        PasswordTxtField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Enter your password");
 
     }
 
