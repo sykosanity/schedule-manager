@@ -1,5 +1,6 @@
 package Components;
 
+import Components.Modules.GradientCell;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import Database.Database;
