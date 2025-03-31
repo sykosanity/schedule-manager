@@ -121,8 +121,7 @@ public class Login extends javax.swing.JFrame {
         boolean loginSuccessful = validateLogin(username, password);
 
         if (loginSuccessful) {
-            Table dashboard = new Table();
-            dashboard.setVisible(true);
+//            new Dashboard().setVisible(true);
             this.dispose();
             // find users
             HashMap<String, String> userDetails = getUserDetails(username);
