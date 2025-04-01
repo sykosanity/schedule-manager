@@ -60,6 +60,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DashboardOptionActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="DashboardOption.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        DashboardOption.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        DashboardOption.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="0" y="130" width="250" height="40"/>
@@ -74,6 +77,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ScheduleOptionActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="ScheduleOption.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        ScheduleOption.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        ScheduleOption.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="0" y="170" width="250" height="40"/>
@@ -88,6 +94,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Option3ActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Option3.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        Option3.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        Option3.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="0" y="210" width="250" height="40"/>
@@ -104,6 +113,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LogOutOptionActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="LogOutOption.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        LogOutOption.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        LogOutOption.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="0" y="590" width="250" height="40"/>
@@ -118,6 +130,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SettingsOptionActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="SettingsOption.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        SettingsOption.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        SettingsOption.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="0" y="320" width="250" height="40"/>
@@ -132,6 +147,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="FeedbackOptionActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="FeedbackOption.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        FeedbackOption.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        FeedbackOption.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="0" y="360" width="250" height="40"/>

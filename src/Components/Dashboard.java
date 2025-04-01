@@ -5,7 +5,8 @@
 package Components;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -56,6 +57,17 @@ public class Dashboard extends javax.swing.JFrame {
                 DashboardOptionActionPerformed(evt);
             }
         });
+        DashboardOption.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                DashboardOption.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                DashboardOption.setBackground(new Color(4,76,172)); // Reset to default
+            }
+        });
         PanelPane.add(DashboardOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 250, 40));
 
         ScheduleOption.setText("Schedule");
@@ -63,6 +75,17 @@ public class Dashboard extends javax.swing.JFrame {
         ScheduleOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ScheduleOptionActionPerformed(evt);
+            }
+        });
+        ScheduleOption.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ScheduleOption.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ScheduleOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
         PanelPane.add(ScheduleOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 250, 40));
@@ -74,6 +97,17 @@ public class Dashboard extends javax.swing.JFrame {
                 Option3ActionPerformed(evt);
             }
         });
+        Option3.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                Option3.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                Option3.setBackground(new Color(4,76,172)); // Reset to default
+            }
+        });
         PanelPane.add(Option3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 210, 250, 40));
 
         LogOutOption.setText("Log out");
@@ -81,6 +115,17 @@ public class Dashboard extends javax.swing.JFrame {
         LogOutOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LogOutOptionActionPerformed(evt);
+            }
+        });
+        LogOutOption.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                LogOutOption.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                LogOutOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
         PanelPane.add(LogOutOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 250, 40));
@@ -92,6 +137,17 @@ public class Dashboard extends javax.swing.JFrame {
                 SettingsOptionActionPerformed(evt);
             }
         });
+        SettingsOption.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                SettingsOption.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                SettingsOption.setBackground(new Color(4,76,172)); // Reset to default
+            }
+        });
         PanelPane.add(SettingsOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 250, 40));
 
         FeedbackOption.setText("Feedback");
@@ -99,6 +155,17 @@ public class Dashboard extends javax.swing.JFrame {
         FeedbackOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FeedbackOptionActionPerformed(evt);
+            }
+        });
+        FeedbackOption.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                FeedbackOption.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                FeedbackOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
         PanelPane.add(FeedbackOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 250, 40));
@@ -222,7 +289,7 @@ public class Dashboard extends javax.swing.JFrame {
         DashboardOption.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
         DashboardOption.setBorderPainted(false);
         DashboardOption.setFocusPainted(false);
-        DashboardOption.setOpaque(true);
+        DashboardOption.setOpaque(true);        
 
         // Example: Customizing the UI after NetBeans-generated code
         ScheduleOption.setUI(new mdlaf.components.button.MaterialButtonUI());
