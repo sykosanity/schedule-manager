@@ -52,7 +52,11 @@ public class Database {
         }
     }
 
-    public static List<HashMap<String, String>> getDatabase() {
+    public static List<HashMap<String, String>> getAccounts() {
         return dbAccounts;
+    }
+    
+    public static List<HashMap<String, String>> getStaff() {
+        return dbStaff;
     }
 }

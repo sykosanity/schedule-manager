@@ -24,7 +24,7 @@ public class Main {
         Database.initDatabase();
 
         // Print all user data
-        for (HashMap<String, String> db : Database.getDatabase()) {
+        for (HashMap<String, String> db : Database.getAccounts()) {
             System.out.println(db);
             System.out.println(db.get("user_name"));
         }
