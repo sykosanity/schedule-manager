@@ -43,9 +43,9 @@ public class Database {
             }
 
             System.out.println("Database fetched accounts:");
-            for (HashMap<String, String> user : dbAccounts) {
-                System.out.println(user);
-            }
+//            for (HashMap<String, String> user : dbAccounts) {
+//                System.out.println(user);
+//            }
 
         } catch (Exception e) {
             System.out.println("Database error: " + e.getMessage());

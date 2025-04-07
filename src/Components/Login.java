@@ -152,7 +152,7 @@ public class Login extends javax.swing.JFrame {
 
     private boolean validateLogin(String username, String password) {
 
-        List<HashMap<String, String>> accounts = Database.getDatabase();
+        List<HashMap<String, String>> accounts = Database.getAccounts();
 
         for (HashMap<String, String> account : accounts) {
 
@@ -178,7 +178,7 @@ public class Login extends javax.swing.JFrame {
 
     // user details
     private HashMap<String, String> getUserDetails(String username) {
-        List<HashMap<String, String>> accounts = Database.getDatabase();
+        List<HashMap<String, String>> accounts = Database.getAccounts();
 
         for (HashMap<String, String> account : accounts) {
             if (account.get("user_name").equals(username)) {
