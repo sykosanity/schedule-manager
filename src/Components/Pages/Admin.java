@@ -15,6 +15,7 @@ import Database.Database;
 import java.awt.Dimension;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -97,21 +98,34 @@ public class Admin extends javax.swing.JPanel {
         TabPanel.setLayout(null);
 
         AddButton.setText("Add");
+        AddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddButtonActionPerformed(evt);
+            }
+        });
         TabPanel.add(AddButton);
-        AddButton.setBounds(730, 10, 49, 28);
+        AddButton.setBounds(680, 10, 90, 28);
 
         UpdateButton.setText("Update");
+        UpdateButton.setMaximumSize(new java.awt.Dimension(49, 28));
+        UpdateButton.setMinimumSize(new java.awt.Dimension(49, 28));
+        UpdateButton.setName(""); // NOI18N
+        UpdateButton.setPreferredSize(new java.awt.Dimension(49, 28));
         TabPanel.add(UpdateButton);
-        UpdateButton.setBounds(800, 10, 68, 28);
+        UpdateButton.setBounds(780, 10, 90, 28);
 
         DeleteButton.setText("Delete");
+        DeleteButton.setMaximumSize(new java.awt.Dimension(49, 28));
+        DeleteButton.setMinimumSize(new java.awt.Dimension(49, 28));
+        DeleteButton.setName(""); // NOI18N
+        DeleteButton.setPreferredSize(new java.awt.Dimension(49, 28));
         DeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DeleteButtonActionPerformed(evt);
             }
         });
         TabPanel.add(DeleteButton);
-        DeleteButton.setBounds(890, 10, 64, 28);
+        DeleteButton.setBounds(880, 10, 90, 28);
 
         SearchBar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,11 +142,14 @@ public class Admin extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1050, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1050, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(MainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -186,17 +203,119 @@ public class Admin extends javax.swing.JPanel {
             System.out.println("Deletion cancelled.");
         }
     }//GEN-LAST:event_DeleteButtonActionPerformed
-    
+
+    private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
+        // TODO add your handling code here:
+        addNewUser();
+    }//GEN-LAST:event_AddButtonActionPerformed
+
+    private void addUserToDatabase(String fullName, String userName, String userPassword, String rank, String permissions) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+            if (permissions == null || permissions.isEmpty()) {
+                permissions = "user";
+
+            }
+
+            String insertQuery = "INSERT INTO accounts (user_name, user_password, full_name, rank, permissions) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(insertQuery);
+            statement.setString(1, userName);
+            statement.setString(2, userPassword);
+            statement.setString(3, fullName);
+            statement.setString(4, rank);
+            statement.setString(5, permissions);
+            statement.executeUpdate();
+
+            System.out.println("User " + userName + " added to database.");
+        } catch (SQLException e) {
+            System.out.println("Error adding user to database: " + e.getMessage());
+        }
+    }
+
+    private void addNewUser() {
+        //dialog
+        javax.swing.JDialog dialog = new javax.swing.JDialog();
+        dialog.setTitle("Add New User");
+        dialog.setSize(300, 250);
+        dialog.setLayout(new java.awt.GridLayout(5, 2));
+
+        //new labels and text fields
+        javax.swing.JLabel fullNameLabel = new javax.swing.JLabel("Full Name:");
+        javax.swing.JTextField fullNameField = new javax.swing.JTextField();
+        javax.swing.JLabel userNameLabel = new javax.swing.JLabel("Username:");
+        javax.swing.JTextField userNameField = new javax.swing.JTextField();
+        javax.swing.JLabel passwordLabel = new javax.swing.JLabel("Password:");
+        javax.swing.JPasswordField passwordField = new javax.swing.JPasswordField();
+        javax.swing.JLabel rankLabel = new javax.swing.JLabel("Rank:");
+        javax.swing.JTextField rankField = new javax.swing.JTextField();
+
+        //buttons
+        javax.swing.JButton submitButton = new javax.swing.JButton("Submit");
+        javax.swing.JButton cancelButton = new javax.swing.JButton("Cancel");
+
+        //adds to dialog
+        dialog.add(fullNameLabel);
+        dialog.add(fullNameField);
+        dialog.add(userNameLabel);
+        dialog.add(userNameField);
+        dialog.add(passwordLabel);
+        dialog.add(passwordField);
+        dialog.add(rankLabel);
+        dialog.add(rankField);
+        dialog.add(submitButton);
+        dialog.add(cancelButton);
+
+        dialog.setLocationRelativeTo(null);
+        //dialog pops
+        dialog.setVisible(true);
+
+        //submit buutton
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                String fullName = fullNameField.getText();
+                String userName = userNameField.getText();
+                String userPassword = new String(passwordField.getPassword());
+                String rank = rankField.getText();
+
+                //checks for validationn
+                if (fullName.isEmpty() || userName.isEmpty() || userPassword.isEmpty() || rank.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(dialog, "All fields are required!");
+                    return;
+                }
+
+                if (Pattern.compile("\\d+").matcher(fullName).find()) {
+                    javax.swing.JOptionPane.showMessageDialog(dialog, "Bugo way name nga naay number!");
+                    return;
+                }
+
+                //adding to database
+                addUserToDatabase(fullName, userName, userPassword, rank, "Basic");
+
+                dialog.dispose();
+
+                //udpdates table with the new user that is added
+                Database.initDatabase();
+                populateTableWithAccounts();
+            }
+        });
+
+        //cancel button
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dialog.dispose();
+            }
+        });
+    }
+
     private void populateTableWithAccounts() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
-        // Clear the table first
         model.setRowCount(0);
 
         // Populate table with accounts from the database
         for (HashMap<String, String> user : Database.getAccounts()) {
             model.addRow(new Object[]{
-                false, 
+                false,
                 user.get("full_name"),
                 user.get("rank"),
                 user.get("user_name")
