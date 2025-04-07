@@ -9,11 +9,18 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 public class Login extends javax.swing.JFrame {
 
+    public static String USER_RANK;
+    public static String USER_PERMISSION;
+    public static String USER_FULL_NAME;
+    public static String USER_PROFILE_IMAGE;
+
     public Login() {
+
         System.out.println("Initiated Login");
         initComponents();
         SetDefault();
         applyCustomComponents();
+
     }
 
     public void SetDefault() {
@@ -121,11 +128,11 @@ public class Login extends javax.swing.JFrame {
         boolean loginSuccessful = validateLogin(username, password);
 
         if (loginSuccessful) {
-//            new Dashboard().setVisible(true);
             this.dispose();
-            // find users
+
             HashMap<String, String> userDetails = getUserDetails(username);
 
+            new Dashboard().setVisible(true);
             if (userDetails != null) {
                 // close login 
                 this.dispose();
@@ -153,11 +160,14 @@ public class Login extends javax.swing.JFrame {
 
                 System.out.println("ENTERED NAME: " + username);
                 System.out.println("ENTERED PASSWORD: " + password);
-
-                System.out.println(account.get("user_name"));
-                System.out.println(account.get("user_password"));
+                System.out.println("RANK: " + account.get("rank"));
+                System.out.println("PERMISSION: " + account.get("permissions"));
 
                 if (account.get("user_name").equals(username) && account.get("user_password").equals(password)) {
+                    USER_PERMISSION = account.get("permissions");
+                    USER_FULL_NAME = account.get("full_name");
+                    USER_PROFILE_IMAGE = account.get("imageDir");
+                    USER_RANK = account.get("rank");
                     return true; // Login success
                 }
             }

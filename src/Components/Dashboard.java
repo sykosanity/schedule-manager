@@ -1,30 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Components;
 
-import com.formdev.flatlaf.FlatClientProperties;
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import java.net.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.awt.geom.Ellipse2D;
+import java.io.File;
+import javax.swing.filechooser.FileSystemView;
 
-/**
- *
- * @author USER
- */
 public class Dashboard extends javax.swing.JFrame {
 
-    public Dashboard() {
-        initComponents();
-//        setLayout(null);  // Set JFrame layout to null
+    public static String ImageURL = "https://cdn.discordapp.com/attachments/1286683285128216638/1356918173961687040/images.jpeg?ex=67ee5006&is=67ecfe86&hm=be42c32b864d5efaf49875d8e658a6c274501646112dbcef34cb96c074478a4d&";
 
+    public Dashboard() {
+
+        initComponents();
+
+        applyText();
         Components.Pages.Dashboard dashboardSection = new Components.Pages.Dashboard();
         dashboardSection.setBounds(0, 0, 1050, 720); // Set position & size
         add(dashboardSection);  // Add the dashboard to the frame
-        repaint();  // Refresh the UI     
-        applyCustomComponents();                 
+        applyCustomComponents();
+
     }
 
     @SuppressWarnings("unchecked")
@@ -34,12 +34,13 @@ public class Dashboard extends javax.swing.JFrame {
         PanelPane = new javax.swing.JPanel();
         DashboardOption = new javax.swing.JButton();
         ScheduleOption = new javax.swing.JButton();
-        Option3 = new javax.swing.JButton();
+        AdminOption = new javax.swing.JButton();
         LogOutOption = new javax.swing.JButton();
         SettingsOption = new javax.swing.JButton();
         FeedbackOption = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        PermissionText = new javax.swing.JLabel();
+        ImageLabel = new javax.swing.JLabel();
+        UserNameText = new javax.swing.JLabel();
         UIPane = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -68,7 +69,7 @@ public class Dashboard extends javax.swing.JFrame {
                 DashboardOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(DashboardOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 250, 40));
+        PanelPane.add(DashboardOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 250, 40));
 
         ScheduleOption.setText("Schedule");
         ScheduleOption.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -88,27 +89,27 @@ public class Dashboard extends javax.swing.JFrame {
                 ScheduleOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(ScheduleOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 250, 40));
+        PanelPane.add(ScheduleOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 250, 40));
 
-        Option3.setText("Option 3");
-        Option3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        Option3.addActionListener(new java.awt.event.ActionListener() {
+        AdminOption.setText("Admin");
+        AdminOption.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        AdminOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Option3ActionPerformed(evt);
+                AdminOptionActionPerformed(evt);
             }
         });
-        Option3.addMouseListener(new MouseAdapter() {
+        AdminOption.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                Option3.setBackground(new Color(36,100,180)); // Hover color
+                AdminOption.setBackground(new Color(36,100,180)); // Hover color
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                Option3.setBackground(new Color(4,76,172)); // Reset to default
+                AdminOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(Option3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 210, 250, 40));
+        PanelPane.add(AdminOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 250, 40));
 
         LogOutOption.setText("Log out");
         LogOutOption.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -148,7 +149,7 @@ public class Dashboard extends javax.swing.JFrame {
                 SettingsOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(SettingsOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 250, 40));
+        PanelPane.add(SettingsOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 400, 250, 40));
 
         FeedbackOption.setText("Feedback");
         FeedbackOption.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -168,18 +169,19 @@ public class Dashboard extends javax.swing.JFrame {
                 FeedbackOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(FeedbackOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 250, 40));
-        PanelPane.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 90, 80));
-        jLabel2.add(new JLabel(new ImageIcon("C:\\Users\\bancr\\Documents\\GitHub\\schedule-manager\\build\\classes\\Assets\\Images\\logo.png")));
-        ImageIcon icon = new ImageIcon("C:\\Users\\bancr\\Documents\\GitHub\\schedule-manager\\build\\classes\\Assets\\Images\\logo.png");
-        Image image = icon.getImage().getScaledInstance(90, 80, Image.SCALE_SMOOTH);
-        jLabel2.setIcon(new ImageIcon(image));
+        PanelPane.add(FeedbackOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 250, 40));
 
-        jLabel3.setBackground(java.awt.Color.white);
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Hello User");
-        PanelPane.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 100, 40));
+        PermissionText.setBackground(java.awt.Color.white);
+        PermissionText.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        PermissionText.setForeground(new java.awt.Color(255, 255, 255));
+        PanelPane.add(PermissionText, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 230, 40));
+        PanelPane.add(ImageLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 140, 130));
+
+        UserNameText.setBackground(java.awt.Color.white);
+        UserNameText.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        UserNameText.setForeground(new java.awt.Color(255, 255, 255));
+        UserNameText.setText("User");
+        PanelPane.add(UserNameText, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 230, 40));
 
         UIPane.setBackground(new java.awt.Color(255, 255, 255));
         UIPane.setPreferredSize(new java.awt.Dimension(1050, 0));
@@ -195,7 +197,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(UIPaneLayout.createSequentialGroup()
                 .addGap(383, 383, 383)
                 .addComponent(jLabel1)
-                .addContainerGap(416, Short.MAX_VALUE))
+                .addContainerGap(406, Short.MAX_VALUE))
         );
         UIPaneLayout.setVerticalGroup(
             UIPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,8 +214,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PanelPane, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(UIPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1038, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(UIPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,19 +266,100 @@ public class Dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_FeedbackOptionActionPerformed
 
-    private void Option3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Option3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Option3ActionPerformed
+    private void AdminOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdminOptionActionPerformed
+        
+        UIPane.removeAll();
 
-    /**
-     * @param args the command line arguments
-     */
+        Components.Pages.Admin admin = new Components.Pages.Admin();
+
+        admin.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
+
+        UIPane.add(admin);
+        UIPane.revalidate();
+        UIPane.repaint();
+        
+    }//GEN-LAST:event_AdminOptionActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Dashboard().setVisible(true);
             }
         });
+    }
+
+    public final void setProfilePicture() {
+        setCircularImage(ImageLabel, ImageURL); // Replace with a direct image link
+
+    }
+
+    public final void setCircularImage(JLabel imageLabel, String imageUrl) {
+        try {
+            System.out.println("Attempting to load image...");
+
+            // Load image from URL
+            URL imageURL = new URL(imageUrl);
+            BufferedImage originalImage = ImageIO.read(imageURL);
+
+            // Get JLabel dimensions
+            int labelWidth = imageLabel.getWidth();
+            int labelHeight = imageLabel.getHeight();
+
+            // Ensure JLabel has a valid size before resizing
+            if (labelWidth > 0 && labelHeight > 0) {
+                // Resize image to fit JLabel
+                Image scaledImage = originalImage.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
+                BufferedImage resizedImage = new BufferedImage(labelWidth, labelHeight, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = resizedImage.createGraphics();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.drawImage(scaledImage, 0, 0, null);
+                g2d.dispose();
+
+                // Create circular image
+                BufferedImage circularImage = new BufferedImage(labelWidth, labelHeight, BufferedImage.TYPE_INT_ARGB);
+                g2d = circularImage.createGraphics();
+                g2d.setClip(new Ellipse2D.Float(0, 0, labelWidth, labelHeight));
+                g2d.drawImage(resizedImage, 0, 0, null);
+                g2d.dispose();
+
+                // Set the circular image as JLabel icon
+                imageLabel.setIcon(new ImageIcon(circularImage));
+                System.out.println("Image loaded and applied successfully!");
+            } else {
+                System.out.println("JLabel has zero size, cannot scale image yet.");
+            }
+        } catch (Exception e) {
+            imageLabel.setText("Image not found");
+            System.out.println("Image not found");
+            e.printStackTrace();
+        }
+    }
+
+    public void applyText() {
+        String userRank = Login.USER_RANK;
+
+        System.out.println("Permission Level = " + userRank);
+
+        if ("Dean".equals(Login.USER_RANK)) {
+            System.out.println("ADMIN");
+            PermissionText.setText(userRank);
+            PermissionText.setHorizontalAlignment(SwingConstants.CENTER);
+            PermissionText.setVerticalAlignment(SwingConstants.CENTER);
+
+            AdminOption.setVisible(true); // Hide the button when the action is triggered
+
+        } else {
+            PermissionText.setText(userRank);
+            PermissionText.setHorizontalAlignment(SwingConstants.CENTER);
+            PermissionText.setVerticalAlignment(SwingConstants.CENTER);
+
+            AdminOption.setVisible(false); // Hide the button when the action is triggered
+            System.out.println("USER");
+        }
+        
+        UserNameText.setText(Login.USER_FULL_NAME);
+        UserNameText.setHorizontalAlignment(SwingConstants.CENTER);
+        UserNameText.setVerticalAlignment(SwingConstants.CENTER);
     }
 
     public void applyCustomComponents() {
@@ -289,7 +371,7 @@ public class Dashboard extends javax.swing.JFrame {
         DashboardOption.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
         DashboardOption.setBorderPainted(false);
         DashboardOption.setFocusPainted(false);
-        DashboardOption.setOpaque(true);        
+        DashboardOption.setOpaque(true);
 
         // Example: Customizing the UI after NetBeans-generated code
         ScheduleOption.setUI(new mdlaf.components.button.MaterialButtonUI());
@@ -300,14 +382,14 @@ public class Dashboard extends javax.swing.JFrame {
         ScheduleOption.setFocusPainted(false);
         ScheduleOption.setOpaque(true);
 
-        Option3.setUI(new mdlaf.components.button.MaterialButtonUI());
-        Option3.setBackground(new java.awt.Color(4, 76, 172)); // Blue
-        Option3.setForeground(java.awt.Color.WHITE);
-        Option3.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
-        Option3.setBorderPainted(false);
-        Option3.setFocusPainted(false);
-        Option3.setOpaque(true);
-        
+        AdminOption.setUI(new mdlaf.components.button.MaterialButtonUI());
+        AdminOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
+        AdminOption.setForeground(java.awt.Color.WHITE);
+        AdminOption.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        AdminOption.setBorderPainted(false);
+        AdminOption.setFocusPainted(false);
+        AdminOption.setOpaque(true);
+
         SettingsOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         SettingsOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         SettingsOption.setForeground(java.awt.Color.WHITE);
@@ -315,7 +397,7 @@ public class Dashboard extends javax.swing.JFrame {
         SettingsOption.setBorderPainted(false);
         SettingsOption.setFocusPainted(false);
         SettingsOption.setOpaque(true);
-        
+
         ScheduleOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         ScheduleOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         ScheduleOption.setForeground(java.awt.Color.WHITE);
@@ -323,7 +405,7 @@ public class Dashboard extends javax.swing.JFrame {
         ScheduleOption.setBorderPainted(false);
         ScheduleOption.setFocusPainted(false);
         ScheduleOption.setOpaque(true);
-        
+
         FeedbackOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         FeedbackOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         FeedbackOption.setForeground(java.awt.Color.WHITE);
@@ -331,7 +413,7 @@ public class Dashboard extends javax.swing.JFrame {
         FeedbackOption.setBorderPainted(false);
         FeedbackOption.setFocusPainted(false);
         FeedbackOption.setOpaque(true);
-        
+
         LogOutOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         LogOutOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         LogOutOption.setForeground(java.awt.Color.WHITE);
@@ -342,16 +424,17 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AdminOption;
     private javax.swing.JButton DashboardOption;
     private javax.swing.JButton FeedbackOption;
+    private javax.swing.JLabel ImageLabel;
     private javax.swing.JButton LogOutOption;
-    private javax.swing.JButton Option3;
     private javax.swing.JPanel PanelPane;
+    private javax.swing.JLabel PermissionText;
     private javax.swing.JButton ScheduleOption;
     private javax.swing.JButton SettingsOption;
     private javax.swing.JPanel UIPane;
+    private javax.swing.JLabel UserNameText;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }
