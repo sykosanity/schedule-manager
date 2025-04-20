@@ -85,20 +85,20 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JButton" name="AdminOption">
+        <Component class="javax.swing.JButton" name="StaffButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Admin"/>
+            <Property name="text" type="java.lang.String" value="Employees"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AdminOptionActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StaffButtonActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="AdminOption.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        AdminOption.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        AdminOption.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="StaffButton.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        StaffButton.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        StaffButton.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="320" width="250" height="40"/>
+              <AbsoluteConstraints x="0" y="390" width="250" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -117,7 +117,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="590" width="250" height="40"/>
+              <AbsoluteConstraints x="0" y="660" width="250" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -134,7 +134,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="400" width="250" height="40"/>
+              <AbsoluteConstraints x="0" y="520" width="250" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -151,7 +151,24 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="440" width="250" height="40"/>
+              <AbsoluteConstraints x="0" y="560" width="250" height="40"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JButton" name="CoursesButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Courses"/>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CoursesButtonActionPerformed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="StaffButton.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        StaffButton.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        StaffButton.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="430" width="250" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -196,6 +213,54 @@
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="10" y="140" width="230" height="40"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="DashboardSectionLabel">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="  Dashboard"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="220" width="90" height="-1"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="OptionSectionLabel">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="  Options"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="500" width="90" height="-1"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="AdminSectionLabel">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="  Admin"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="370" width="90" height="-1"/>
             </Constraint>
           </Constraints>
         </Component>

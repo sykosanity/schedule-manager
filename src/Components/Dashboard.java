@@ -34,13 +34,17 @@ public class Dashboard extends javax.swing.JFrame {
         PanelPane = new javax.swing.JPanel();
         DashboardOption = new javax.swing.JButton();
         ScheduleOption = new javax.swing.JButton();
-        AdminOption = new javax.swing.JButton();
+        StaffButton = new javax.swing.JButton();
         LogOutOption = new javax.swing.JButton();
         SettingsOption = new javax.swing.JButton();
         FeedbackOption = new javax.swing.JButton();
+        CoursesButton = new javax.swing.JButton();
         PermissionText = new javax.swing.JLabel();
         ImageLabel = new javax.swing.JLabel();
         UserNameText = new javax.swing.JLabel();
+        DashboardSectionLabel = new javax.swing.JLabel();
+        OptionSectionLabel = new javax.swing.JLabel();
+        AdminSectionLabel = new javax.swing.JLabel();
         UIPane = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -91,25 +95,25 @@ public class Dashboard extends javax.swing.JFrame {
         });
         PanelPane.add(ScheduleOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 250, 40));
 
-        AdminOption.setText("Admin");
-        AdminOption.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        AdminOption.addActionListener(new java.awt.event.ActionListener() {
+        StaffButton.setText("Employees");
+        StaffButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        StaffButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AdminOptionActionPerformed(evt);
+                StaffButtonActionPerformed(evt);
             }
         });
-        AdminOption.addMouseListener(new MouseAdapter() {
+        StaffButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                AdminOption.setBackground(new Color(36,100,180)); // Hover color
+                StaffButton.setBackground(new Color(36,100,180)); // Hover color
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                AdminOption.setBackground(new Color(4,76,172)); // Reset to default
+                StaffButton.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(AdminOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 250, 40));
+        PanelPane.add(StaffButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 390, 250, 40));
 
         LogOutOption.setText("Log out");
         LogOutOption.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -129,7 +133,7 @@ public class Dashboard extends javax.swing.JFrame {
                 LogOutOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(LogOutOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 250, 40));
+        PanelPane.add(LogOutOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 660, 250, 40));
 
         SettingsOption.setText("Settings");
         SettingsOption.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -149,7 +153,7 @@ public class Dashboard extends javax.swing.JFrame {
                 SettingsOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(SettingsOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 400, 250, 40));
+        PanelPane.add(SettingsOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 250, 40));
 
         FeedbackOption.setText("Feedback");
         FeedbackOption.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -169,7 +173,27 @@ public class Dashboard extends javax.swing.JFrame {
                 FeedbackOption.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(FeedbackOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 250, 40));
+        PanelPane.add(FeedbackOption, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 560, 250, 40));
+
+        CoursesButton.setText("Courses");
+        CoursesButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        CoursesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CoursesButtonActionPerformed(evt);
+            }
+        });
+        StaffButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                StaffButton.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                StaffButton.setBackground(new Color(4,76,172)); // Reset to default
+            }
+        });
+        PanelPane.add(CoursesButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 250, 40));
 
         PermissionText.setBackground(java.awt.Color.white);
         PermissionText.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -182,6 +206,21 @@ public class Dashboard extends javax.swing.JFrame {
         UserNameText.setForeground(new java.awt.Color(255, 255, 255));
         UserNameText.setText("User");
         PanelPane.add(UserNameText, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 230, 40));
+
+        DashboardSectionLabel.setBackground(new java.awt.Color(255, 255, 255));
+        DashboardSectionLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        DashboardSectionLabel.setText("  Dashboard");
+        PanelPane.add(DashboardSectionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 90, -1));
+
+        OptionSectionLabel.setBackground(new java.awt.Color(255, 255, 255));
+        OptionSectionLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        OptionSectionLabel.setText("  Options");
+        PanelPane.add(OptionSectionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 500, 90, -1));
+
+        AdminSectionLabel.setBackground(new java.awt.Color(255, 255, 255));
+        AdminSectionLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        AdminSectionLabel.setText("  Admin");
+        PanelPane.add(AdminSectionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 90, -1));
 
         UIPane.setBackground(new java.awt.Color(255, 255, 255));
         UIPane.setPreferredSize(new java.awt.Dimension(1050, 0));
@@ -268,19 +307,23 @@ public class Dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_FeedbackOptionActionPerformed
 
-    private void AdminOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdminOptionActionPerformed
-        
+    private void StaffButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StaffButtonActionPerformed
+
         UIPane.removeAll();
 
-        Components.Pages.Admin admin = new Components.Pages.Admin();
+        Components.Pages.Staff admin = new Components.Pages.Staff();
 
         admin.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
 
         UIPane.add(admin);
         UIPane.revalidate();
         UIPane.repaint();
-        
-    }//GEN-LAST:event_AdminOptionActionPerformed
+
+    }//GEN-LAST:event_StaffButtonActionPerformed
+
+    private void CoursesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CoursesButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CoursesButtonActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -342,23 +385,27 @@ public class Dashboard extends javax.swing.JFrame {
 
         System.out.println("Permission Level = " + userRank);
 
-        if ("Dean".equals(Login.USER_RANK)) {
+        if ("Dean".equals(Login.USER_RANK) || "Academic Coordinator".equals(Login.USER_RANK)) {
             System.out.println("ADMIN");
             PermissionText.setText(userRank);
             PermissionText.setHorizontalAlignment(SwingConstants.CENTER);
             PermissionText.setVerticalAlignment(SwingConstants.CENTER);
 
-            AdminOption.setVisible(true); // Hide the button when the action is triggered
-
+            StaffButton.setVisible(true); // Hide the button when the action is triggered
+            CoursesButton.setVisible(true);
+            AdminSectionLabel.setVisible(true);
         } else {
             PermissionText.setText(userRank);
             PermissionText.setHorizontalAlignment(SwingConstants.CENTER);
             PermissionText.setVerticalAlignment(SwingConstants.CENTER);
 
-            AdminOption.setVisible(false); // Hide the button when the action is triggered
+            StaffButton.setVisible(false); // Hide the button when the action is triggered
+            CoursesButton.setVisible(false);
+            AdminSectionLabel.setVisible(false);
+
             System.out.println("USER");
         }
-        
+
         UserNameText.setText(Login.USER_FULL_NAME);
         UserNameText.setHorizontalAlignment(SwingConstants.CENTER);
         UserNameText.setVerticalAlignment(SwingConstants.CENTER);
@@ -366,7 +413,6 @@ public class Dashboard extends javax.swing.JFrame {
 
     public void applyCustomComponents() {
 
-        // Example: Customizing the UI after NetBeans-generated code
         DashboardOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         DashboardOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         DashboardOption.setForeground(java.awt.Color.WHITE);
@@ -375,7 +421,6 @@ public class Dashboard extends javax.swing.JFrame {
         DashboardOption.setFocusPainted(false);
         DashboardOption.setOpaque(true);
 
-        // Example: Customizing the UI after NetBeans-generated code
         ScheduleOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         ScheduleOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         ScheduleOption.setForeground(java.awt.Color.WHITE);
@@ -384,14 +429,33 @@ public class Dashboard extends javax.swing.JFrame {
         ScheduleOption.setFocusPainted(false);
         ScheduleOption.setOpaque(true);
 
-        AdminOption.setUI(new mdlaf.components.button.MaterialButtonUI());
-        AdminOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
-        AdminOption.setForeground(java.awt.Color.WHITE);
-        AdminOption.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
-        AdminOption.setBorderPainted(false);
-        AdminOption.setFocusPainted(false);
-        AdminOption.setOpaque(true);
+        StaffButton.setUI(new mdlaf.components.button.MaterialButtonUI());
+        StaffButton.setBackground(new java.awt.Color(4, 76, 172)); // Blue
+        StaffButton.setForeground(java.awt.Color.WHITE);
+        StaffButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        StaffButton.setBorderPainted(false);
+        StaffButton.setFocusPainted(false);
+        StaffButton.setOpaque(true);
 
+        CoursesButton.setUI(new mdlaf.components.button.MaterialButtonUI());
+        CoursesButton.setBackground(new java.awt.Color(4, 76, 172)); // Blue
+        CoursesButton.setForeground(java.awt.Color.WHITE);
+        CoursesButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        CoursesButton.setBorderPainted(false);
+        CoursesButton.setFocusPainted(false);
+        CoursesButton.setOpaque(true);
+        CoursesButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                CoursesButton.setBackground(new Color(36, 100, 180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                CoursesButton.setBackground(new Color(4, 76, 172)); // Reset to default
+            }
+        });
+        
         SettingsOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         SettingsOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         SettingsOption.setForeground(java.awt.Color.WHITE);
@@ -426,15 +490,19 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton AdminOption;
+    private javax.swing.JLabel AdminSectionLabel;
+    private javax.swing.JButton CoursesButton;
     private javax.swing.JButton DashboardOption;
+    private javax.swing.JLabel DashboardSectionLabel;
     private javax.swing.JButton FeedbackOption;
     private javax.swing.JLabel ImageLabel;
     private javax.swing.JButton LogOutOption;
+    private javax.swing.JLabel OptionSectionLabel;
     private javax.swing.JPanel PanelPane;
     private javax.swing.JLabel PermissionText;
     private javax.swing.JButton ScheduleOption;
     private javax.swing.JButton SettingsOption;
+    private javax.swing.JButton StaffButton;
     private javax.swing.JPanel UIPane;
     private javax.swing.JLabel UserNameText;
     private javax.swing.JLabel jLabel1;

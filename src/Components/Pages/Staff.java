@@ -24,12 +24,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author USER
  */
-public class Admin extends javax.swing.JPanel {
+public class Staff extends javax.swing.JPanel {
 
     /**
      * Creates new form Admin
      */
-    public Admin() {
+    public Staff() {
         initComponents();
 //        setLayout(new java.awt.BorderLayout());
         this.setPreferredSize(new Dimension(1050, 720));
@@ -57,7 +57,7 @@ public class Admin extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        MainPanel.setBackground(new java.awt.Color(51, 255, 51));
+        MainPanel.setBackground(new java.awt.Color(255, 255, 255));
         MainPanel.setLayout(null);
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
@@ -104,7 +104,7 @@ public class Admin extends javax.swing.JPanel {
             }
         });
         TabPanel.add(AddButton);
-        AddButton.setBounds(680, 10, 90, 28);
+        AddButton.setBounds(680, 10, 90, 27);
 
         UpdateButton.setText("Update");
         UpdateButton.setMaximumSize(new java.awt.Dimension(49, 28));
@@ -133,7 +133,7 @@ public class Admin extends javax.swing.JPanel {
             }
         });
         TabPanel.add(SearchBar);
-        SearchBar.setBounds(0, 10, 170, 28);
+        SearchBar.setBounds(0, 10, 170, 26);
 
         MainPanel.add(TabPanel);
         TabPanel.setBounds(20, 90, 980, 40);
