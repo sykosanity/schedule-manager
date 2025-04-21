@@ -508,13 +508,12 @@ public class Staff extends javax.swing.JPanel {
                 return;
             }
 
-            String insertQuery = "INSERT INTO accounts (user_name, user_password, full_name, rank, permissions) VALUES (?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO accounts (user_name, user_password, full_name, rank) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(insertQuery);
             statement.setString(1, userName);
             statement.setString(2, userPassword);
             statement.setString(3, fullName);
             statement.setString(4, rank);
-            statement.setString(5, permissions);
             statement.executeUpdate();
 
             System.out.println("User " + userName + " added to database.");
