@@ -311,18 +311,28 @@ public class Dashboard extends javax.swing.JFrame {
 
         UIPane.removeAll();
 
-        Components.Pages.Staff admin = new Components.Pages.Staff();
+        Components.Pages.Staff staff = new Components.Pages.Staff();
 
-        admin.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
+        staff.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
 
-        UIPane.add(admin);
+        UIPane.add(staff);
         UIPane.revalidate();
         UIPane.repaint();
 
     }//GEN-LAST:event_StaffButtonActionPerformed
 
     private void CoursesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CoursesButtonActionPerformed
-        // TODO add your handling code here:
+
+        UIPane.removeAll();
+
+        Components.Pages.Courses courses = new Components.Pages.Courses();
+
+        courses.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
+
+        UIPane.add(courses);
+        UIPane.revalidate();
+        UIPane.repaint();
+
     }//GEN-LAST:event_CoursesButtonActionPerformed
 
     public static void main(String args[]) {
@@ -455,7 +465,7 @@ public class Dashboard extends javax.swing.JFrame {
                 CoursesButton.setBackground(new Color(4, 76, 172)); // Reset to default
             }
         });
-        
+
         SettingsOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         SettingsOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         SettingsOption.setForeground(java.awt.Color.WHITE);
