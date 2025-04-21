@@ -8,18 +8,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
 import Database.Database;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
-import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
@@ -38,7 +37,7 @@ public class Courses extends javax.swing.JPanel {
         initComponents();
         this.setPreferredSize(new Dimension(1050, 720));
         setupUIEnhancements();
-        populateTableWithAccounts();
+        populateTableWithCourses();
     }
 
     private void setupUIEnhancements() {
@@ -121,22 +120,32 @@ public class Courses extends javax.swing.JPanel {
 
             },
             new String [] {
-                "", "Name", "Rank", "User_name"
+                "", "Course Code", "Course Title", "Course Type", "Units"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Boolean.class
+
+                , java.lang.Object.class
+
+                , java.lang.Object.class
+
+                , java.lang.Object.class
+
             };
             boolean[] canEdit = new boolean [] {
-                true, true, false, false
+                true, false, false, false, false
             };
-
+            @Override
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                if (columnIndex < types.length) {  // Check if the column index is within bounds
+                    return types [columnIndex];
+                }
+                return Object.class; // Default to Object if the index is out of bounds
             }
-
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];  // Make only 'Select' column editable
             }
         });
         ScrollPane.setViewportView(jTable1);
@@ -155,7 +164,7 @@ public class Courses extends javax.swing.JPanel {
             }
         });
         TabPanel.add(AddButton);
-        AddButton.setBounds(680, 10, 90, 27);
+        AddButton.setBounds(680, 10, 90, 28);
 
         UpdateButton.setText("Update");
         UpdateButton.setMaximumSize(new java.awt.Dimension(49, 28));
@@ -189,7 +198,7 @@ public class Courses extends javax.swing.JPanel {
             }
         });
         TabPanel.add(SearchBar);
-        SearchBar.setBounds(0, 10, 170, 26);
+        SearchBar.setBounds(0, 10, 170, 28);
 
         MainPanel.add(TabPanel);
         TabPanel.setBounds(20, 90, 980, 40);
@@ -219,26 +228,26 @@ public class Courses extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int rowCount = model.getRowCount();
         List<Integer> rowsToDelete = new ArrayList<>();
-        StringBuilder selectedUsers = new StringBuilder();
+        StringBuilder selectedCourse = new StringBuilder();
 
         // find all checked rows
         for (int i = 0; i < rowCount; i++) {
             Boolean isChecked = (Boolean) model.getValueAt(i, 0);
             if (isChecked != null && isChecked) {
                 rowsToDelete.add(i);
-                selectedUsers.append("- ").append(model.getValueAt(i, 1)).append("\n");
+                selectedCourse.append("- ").append(model.getValueAt(i, 1)).append("\n");
             }
         }
 
         if (rowsToDelete.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "No user selected for deletion.");
+            javax.swing.JOptionPane.showMessageDialog(this, "No course selected for deletion.");
             return;
         }
 
         //warning dialog
         int response = javax.swing.JOptionPane.showConfirmDialog(
                 this,
-                "Are you sure you want to delete the following users?\n\n" + selectedUsers,
+                "Are you sure you want to delete the following course/s?\n\n" + selectedCourse,
                 "Confirm Deletion",
                 javax.swing.JOptionPane.YES_NO_OPTION,
                 javax.swing.JOptionPane.WARNING_MESSAGE
@@ -248,12 +257,12 @@ public class Courses extends javax.swing.JPanel {
         if (response == javax.swing.JOptionPane.YES_OPTION) {
             for (int i = rowsToDelete.size() - 1; i >= 0; i--) {
                 int rowIndex = rowsToDelete.get(i);
-                String userName = (String) model.getValueAt(rowIndex, 3);  // getusername from the row
+                String courseCode = (String) model.getValueAt(rowIndex, 1);
 
                 //deletes the selected user from the database method
-                removeUserFromDatabase(userName);
+                removeCourseFromDatabase(courseCode);
             }
-            System.out.println("Deleted users:\n" + selectedUsers);
+            System.out.println("Deleted users:\n" + selectedCourse);
         } else {
             System.out.println("Deletion cancelled.");
         }
@@ -265,215 +274,235 @@ public class Courses extends javax.swing.JPanel {
     }//GEN-LAST:event_AddButtonActionPerformed
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateButtonActionPerformed
-//        // TODO add your handling code here:
-//        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-//
-//        // First, check for checkbox selections
-//        boolean hasCheckedRow = false;
-//        int checkedRowCount = 0;
-//        int lastCheckedRowIndex = -1;
-//
-//        for (int i = 0; i < model.getRowCount(); i++) {
-//            Boolean isChecked = (Boolean) model.getValueAt(i, 0);
-//            if (isChecked != null && isChecked) {
-//                hasCheckedRow = true;
-//                checkedRowCount++;
-//                lastCheckedRowIndex = i;
-//            }
-//        }
-//
-//        // Now check selected rows and make a decision based on both selection methods
-//        int[] selectedRows = jTable1.getSelectedRows();
-//
-//        // If a row is checked via checkbox
-//        if (hasCheckedRow) {
-//            if (checkedRowCount > 1) {
-//                JOptionPane.showMessageDialog(this, "Please select only one user to update.");
-//                return;
-//            }
-//
-//            // If exactly one row is checked, use that row
-//            String fullName = (String) model.getValueAt(lastCheckedRowIndex, 1);
-//            String rank = (String) model.getValueAt(lastCheckedRowIndex, 2);
-//            String userName = (String) model.getValueAt(lastCheckedRowIndex, 3);
-//
-//            updateUserDialog(fullName, userName, rank);
-//            return;
-//        }
-//
-//        // If no checkboxes are checked, use table row selection
-//        if (selectedRows.length != 1) {
-//            JOptionPane.showMessageDialog(this, "Please select exactly one row to update.");
-//            return;
-//        }
-//
-//        // Get data from the selected row
-//        int selectedRow = selectedRows[0];
-//        String fullName = (String) model.getValueAt(selectedRow, 1);
-//        String rank = (String) model.getValueAt(selectedRow, 2);
-//        String userName = (String) model.getValueAt(selectedRow, 3);
-//
-//        // Call method to open the update dialog and pre-fill data
-//        updateUserDialog(fullName, userName, rank);
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        // First, check for checkbox selections
+        boolean hasCheckedRow = false;
+        int checkedRowCount = 0;
+        int lastCheckedRowIndex = -1;
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean isChecked = (Boolean) model.getValueAt(i, 0);
+            if (isChecked != null && isChecked) {
+                hasCheckedRow = true;
+                checkedRowCount++;
+                lastCheckedRowIndex = i;
+            }
+        }
+
+        // Now check selected rows and make a decision based on both selection methods
+        int[] selectedRows = jTable1.getSelectedRows();
+
+        // If a row is checked via checkbox
+        if (hasCheckedRow) {
+            if (checkedRowCount > 1) {
+                JOptionPane.showMessageDialog(this, "Please select only one course to update.");
+                return;
+            }
+
+            // If exactly one row is checked, use that row
+            String courseCode = (String) model.getValueAt(lastCheckedRowIndex, 1);
+            String courseTitle = (String) model.getValueAt(lastCheckedRowIndex, 2);
+            String courseType = (String) model.getValueAt(lastCheckedRowIndex, 3);
+            String units = (String) model.getValueAt(lastCheckedRowIndex, 4);
+
+            updateCourseDialog(courseCode, courseTitle, courseType, units);
+            return;
+        }
+
+        // If no checkboxes are checked, use table row selection
+        if (selectedRows.length != 1) {
+            JOptionPane.showMessageDialog(this, "Please select exactly one row to update.");
+            return;
+        }
+
+        // Get data from the selected row
+        int selectedRow = selectedRows[0];
+        String courseCode = (String) model.getValueAt(selectedRow, 1);
+        String courseTitle = (String) model.getValueAt(selectedRow, 2);
+        String courseType = (String) model.getValueAt(selectedRow, 3);
+        String units = (String) model.getValueAt(selectedRow, 4);
+
+        // Call method to open the update dialog and pre-fill data
+        updateCourseDialog(courseCode, courseTitle, courseType, units);
     }
 
-//    private void updateUserInDatabase(String fullName, String originalUserName, String newUserName, String rank) {
-//        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
-//            // First check if the new username already exists (if it was changed)
-//            if (!originalUserName.equals(newUserName) && courseExists(newUserName)) {
-//                JOptionPane.showMessageDialog(this, "Username '" + newUserName + "' already exists!");
-//                return;
-//            }
-//
-//            String updateQuery = "UPDATE accounts SET full_name = ?, user_name = ?, rank = ? WHERE user_name = ?";
-//            PreparedStatement statement = connection.prepareStatement(updateQuery);
-//            statement.setString(1, fullName);
-//            statement.setString(2, newUserName);
-//            statement.setString(3, rank);
-//            statement.setString(4, originalUserName);
-//            int rowsUpdated = statement.executeUpdate();
-//
-//            if (rowsUpdated > 0) {
-//                JOptionPane.showMessageDialog(this, "User updated successfully.");
-//                // Update the table after successful database update
-//                populateTableWithAccounts();
-//            } else {
-//                JOptionPane.showMessageDialog(this, "No user found with that username.");
-//            }
-//        } catch (SQLException e) {
-//            JOptionPane.showMessageDialog(this, "Error updating user: " + e.getMessage());
-//        }
-//    }
+    private void updateCourseInDatabase(String courseCode, String originalCourseTitle, String newCourseTitle, String courseType, String units) {
+        try (Connection connection = getConnection()) {
+            // First check if the new title already exists (if it was changed)
+            if (!originalCourseTitle.equals(newCourseTitle) && courseExists(newCourseTitle)) {
+                JOptionPane.showMessageDialog(this, "Course title '" + newCourseTitle + "' already exists!");
+                return;
+            }
 
-//    private void updateUserDialog(String fullName, String userName, String rank) {
-//        // Create a new dialog for updating user information
-//        JDialog updateDialog = new JDialog();
-//        updateDialog.setTitle("Update User");
-//        updateDialog.setSize(400, 280);
-//        updateDialog.setModal(true);
-//        updateDialog.setLayout(new BorderLayout());
-//
-//        // Create main panel with padding
-//        JPanel mainPanel = new JPanel(new GridBagLayout());
-//        mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
-//        mainPanel.setBackground(Color.WHITE);
-//
-//        GridBagConstraints gbc = new GridBagConstraints();
-//        gbc.fill = GridBagConstraints.HORIZONTAL;
-//        gbc.insets = new Insets(5, 5, 5, 5);
-//
-//        // Create labels and text fields with pre-filled data
-//        JLabel fullNameLabel = new JLabel("Full Name:");
-//        JTextField fullNameField = new JTextField(fullName);
-//        fullNameField.setPreferredSize(new Dimension(200, 30));
-//
-//        JLabel userNameLabel = new JLabel("Username:");
-//        JTextField userNameField = new JTextField(userName);
-//        userNameField.setPreferredSize(new Dimension(200, 30));
-//
-//        JLabel rankLabel = new JLabel("Rank:");
-//        JTextField rankField = new JTextField(rank);
-//        rankField.setPreferredSize(new Dimension(200, 30));
-//
-//        // Store the original username for reference
-//        final String originalUserName = userName;
-//
-//        // Add components to the panel
-//        gbc.gridx = 0;
-//        gbc.gridy = 0;
-//        mainPanel.add(fullNameLabel, gbc);
-//
-//        gbc.gridx = 1;
-//        mainPanel.add(fullNameField, gbc);
-//
-//        gbc.gridx = 0;
-//        gbc.gridy = 1;
-//        mainPanel.add(userNameLabel, gbc);
-//
-//        gbc.gridx = 1;
-//        mainPanel.add(userNameField, gbc);
-//
-//        gbc.gridx = 0;
-//        gbc.gridy = 2;
-//        mainPanel.add(rankLabel, gbc);
-//
-//        gbc.gridx = 1;
-//        mainPanel.add(rankField, gbc);
-//
-//        // Create button panel
-//        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-//        buttonPanel.setBackground(Color.WHITE);
-//
-//        // Create styled buttons
-//        JButton submitButton = new JButton("Update");
-//        submitButton.setBackground(new Color(52, 152, 219));
-//        submitButton.setForeground(Color.WHITE);
-//        submitButton.setFocusPainted(false);
-//
-//        JButton cancelButton = new JButton("Cancel");
-//        cancelButton.setBackground(new Color(189, 195, 199));
-//        cancelButton.setForeground(Color.WHITE);
-//        cancelButton.setFocusPainted(false);
-//
-//        buttonPanel.add(submitButton);
-//        buttonPanel.add(cancelButton);
-//
-//        // Add panels to dialog
-//        updateDialog.add(mainPanel, BorderLayout.CENTER);
-//        updateDialog.add(buttonPanel, BorderLayout.SOUTH);
-//
-//        // Center the dialog on the screen
-//        updateDialog.setLocationRelativeTo(this);
-//
-//        // Handle the submit button click event
-//        submitButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent evt) {
-//                String newFullName = fullNameField.getText().trim();
-//                String newUserName = userNameField.getText().trim();
-//                String newRank = rankField.getText().trim();
-//
-//                // Check if any field is empty
-//                if (newFullName.isEmpty() || newUserName.isEmpty() || newRank.isEmpty()) {
-//                    JOptionPane.showMessageDialog(updateDialog, "All fields are required!");
-//                    return;
-//                }
-//
-//                if (Pattern.compile("\\d+").matcher(newFullName).find()) {
-//                    JOptionPane.showMessageDialog(updateDialog, "Full name should not contain numbers!");
-//                    return;
-//                }
+            String updateQuery = "UPDATE courses SET course_code = ?, course_title = ?, course_type = ?, units = ? WHERE course_code = ?";
+            PreparedStatement statement = connection.prepareStatement(updateQuery);
+            statement.setString(1, courseCode);
+            statement.setString(2, newCourseTitle);
+            statement.setString(3, courseType);
+            statement.setString(4, units);
+            statement.setString(5, courseCode);
+            int rowsUpdated = statement.executeUpdate();
 
-                // Update the user in the database
-//                updateUserInDatabase(newFullName, originalUserName, newUserName, newRank);
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Course updated successfully.");
+                // Update the table after successful database update
+                populateTableWithCourses();
+            } else {
+                JOptionPane.showMessageDialog(this, "No course found with that code.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error updating course: " + e.getMessage());
+        }
+    }
+
+    private void updateCourseDialog(String courseCode, String courseTitle, String courseType, String units) {
+        // Create a new dialog for updating course information
+        JDialog updateDialog = new JDialog();
+        updateDialog.setTitle("Update Course");
+        updateDialog.setSize(400, 280);
+        updateDialog.setModal(true);
+        updateDialog.setLayout(new BorderLayout());
+
+        // Create main panel with padding
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        mainPanel.setBackground(Color.WHITE);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Create labels and text fields with pre-filled data
+        JLabel courseCodeLabel = new JLabel("Course Code:");
+        JTextField courseCodeField = new JTextField(courseCode);
+        courseCodeField.setPreferredSize(new Dimension(200, 30));
+
+        JLabel courseTitleLabel = new JLabel("Course Title:");
+        JTextField courseTitleField = new JTextField(courseTitle);
+        courseTitleField.setPreferredSize(new Dimension(200, 30));
+
+        JLabel courseTypeLabel = new JLabel("Course Type:");
+        String[] courseTypes = {"Lab", "Lec"};
+        JComboBox<String> courseTypeComboBox = new JComboBox<>(courseTypes);
+        courseTypeComboBox.setSelectedItem(courseType);
+        courseTypeComboBox.setPreferredSize(new Dimension(200, 30));
+
+        JLabel unitsLabel = new JLabel("Units:");
+        JTextField unitsField = new JTextField(units);
+        unitsField.setPreferredSize(new Dimension(200, 30));
+
+        // Store the original course title for reference
+        final String originalCourseTitle = courseTitle;
+
+        // Add components to the panel
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        mainPanel.add(courseCodeLabel, gbc);
+
+        gbc.gridx = 1;
+        mainPanel.add(courseCodeField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        mainPanel.add(courseTitleLabel, gbc);
+
+        gbc.gridx = 1;
+        mainPanel.add(courseTitleField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        mainPanel.add(courseTypeLabel, gbc);
+
+        gbc.gridx = 1;
+        mainPanel.add(courseTypeComboBox, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        mainPanel.add(unitsLabel, gbc);
+
+        gbc.gridx = 1;
+        mainPanel.add(unitsField, gbc);
+
+        // Create button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setBackground(Color.WHITE);
+
+        // Create styled buttons
+        JButton submitButton = new JButton("Update");
+        submitButton.setBackground(new Color(52, 152, 219));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFocusPainted(false);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setBackground(new Color(189, 195, 199));
+        cancelButton.setForeground(Color.WHITE);
+        cancelButton.setFocusPainted(false);
+
+        buttonPanel.add(submitButton);
+        buttonPanel.add(cancelButton);
+
+        // Add panels to dialog
+        updateDialog.add(mainPanel, BorderLayout.CENTER);
+        updateDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Center the dialog on the screen
+        updateDialog.setLocationRelativeTo(this);
+
+        // Handle the submit button click event
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                String newCourseCode = courseCodeField.getText().trim();
+                String newCourseTitle = courseTitleField.getText().trim();
+                String newCourseType = (String) courseTypeComboBox.getSelectedItem();
+                String newUnits = unitsField.getText().trim();
+
+                // Check if any field is empty
+                if (newCourseCode.isEmpty() || newCourseTitle.isEmpty() || newCourseType.isEmpty() || newUnits.isEmpty()) {
+                    JOptionPane.showMessageDialog(updateDialog, "All fields are required!");
+                    return;
+                }
+
+                // Update the course in the database
+                updateCourseInDatabase(newCourseCode, originalCourseTitle, newCourseTitle, newCourseType, newUnits);
 
                 // Close the dialog
-//                updateDialog.dispose();
-//            }
-//        });
+                updateDialog.dispose();
+            }
+        });
 
-//        // Handle the cancel button click event
-//        cancelButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent evt) {
-//                updateDialog.dispose();
-//            }
-//        });
-//
-//        // Show the dialog
-//        updateDialog.setVisible(true);
-//    }
+        // Handle the cancel button click event
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                updateDialog.dispose();
+            }
+        });
+
+        // Show the dialog
+        updateDialog.setVisible(true);
+    }
 
     private void searchCourses() {
         String searchTerm = SearchBar.getText().toLowerCase().trim();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear existing data
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        SearchBar.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                searchCourses();
+            }
+        });
+
+        try (Connection connection = getConnection()) {
             String query = "SELECT course_code, course_title, course_type, units FROM courses WHERE course_code LIKE ? OR course_title LIKE ? OR course_type LIKE ? OR units LIKE ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             String wildcard = "%" + searchTerm + "%";
             stmt.setString(1, wildcard);
             stmt.setString(2, wildcard);
             stmt.setString(3, wildcard);
+            stmt.setString(4, wildcard);
 
             var resultSet = stmt.executeQuery();
 
@@ -487,12 +516,12 @@ public class Courses extends javax.swing.JPanel {
                 model.addRow(new Object[]{false, courseCode, courseTitle, courseType, courseUnits});
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error searching accounts: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error searching course: " + e.getMessage());
         }
     }//GEN-LAST:event_UpdateButtonActionPerformed
 
-    private void addCourseToDatabase(String fullName, String courseCode, String courseTitle, String courseType, String courseUnits) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+    private void addCourseToDatabase(String courseCode, String courseTitle, String courseType, String courseUnits) {
+        try (Connection connection = getConnection()) {
 //            if (permissions == null || permissions.isEmpty()) {
 //                permissions = "user";
 //            }
@@ -510,11 +539,11 @@ public class Courses extends javax.swing.JPanel {
             statement.setString(4, courseUnits);
             statement.executeUpdate();
 
-            System.out.println("User " + courseCode + " added to database.");
-            JOptionPane.showMessageDialog(this, "User added successfully!");
+            System.out.println("Course: " + courseTitle + " added to database.");
+            JOptionPane.showMessageDialog(this, "Course added successfully!");
         } catch (SQLException e) {
-            System.out.println("Error adding user to database: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error adding user: " + e.getMessage());
+            System.out.println("Error adding course to database: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error adding course: " + e.getMessage());
         }
     }
 
@@ -540,21 +569,22 @@ public class Courses extends javax.swing.JPanel {
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         titleLabel.setForeground(new Color(4, 76, 172));
 
-        JLabel fullNameLabel = new JLabel("Course Code:");
-        JTextField fullNameField = new JTextField();
-        fullNameField.setPreferredSize(new Dimension(200, 30));
+        JLabel courseCodeLabel = new JLabel("Course Code:");
+        JTextField courseCodeField = new JTextField();
+        courseCodeField.setPreferredSize(new Dimension(200, 30));
 
-        JLabel userNameLabel = new JLabel("Course Title:");
-        JTextField userNameField = new JTextField();
-        userNameField.setPreferredSize(new Dimension(200, 30));
+        JLabel courseTitleLabel = new JLabel("Course Title:");
+        JTextField courseTitleField = new JTextField();
+        courseTitleField.setPreferredSize(new Dimension(200, 30));
 
-        JLabel passwordLabel = new JLabel("Course Type:");
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setPreferredSize(new Dimension(200, 30));
+        JLabel courseTypeLabel = new JLabel("Course Type:");
+        String[] courseTypes = {"Lab", "Lec"};
+        JComboBox<String> courseTypeComboBox = new JComboBox<>(courseTypes);
+        courseTypeComboBox.setPreferredSize(new Dimension(200, 30));
 
-        JLabel rankLabel = new JLabel("Units:");
-        JTextField rankField = new JTextField();
-        rankField.setPreferredSize(new Dimension(200, 30));
+        JLabel unitsLabel = new JLabel("Units:");
+        JTextField unitsField = new JTextField();
+        unitsField.setPreferredSize(new Dimension(200, 30));
 
         // Add components to panel
         gbc.gridx = 0;
@@ -567,31 +597,31 @@ public class Courses extends javax.swing.JPanel {
         mainPanel.add(new JSeparator(), gbc);
 
         gbc.gridy = 2;
-        mainPanel.add(fullNameLabel, gbc);
+        mainPanel.add(courseCodeLabel, gbc);
 
         gbc.gridx = 1;
-        mainPanel.add(fullNameField, gbc);
+        mainPanel.add(courseCodeField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        mainPanel.add(userNameLabel, gbc);
+        mainPanel.add(courseTitleLabel, gbc);
 
         gbc.gridx = 1;
-        mainPanel.add(userNameField, gbc);
+        mainPanel.add(courseTitleField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        mainPanel.add(passwordLabel, gbc);
+        mainPanel.add(courseTypeLabel, gbc);
 
         gbc.gridx = 1;
-        mainPanel.add(passwordField, gbc);
+        mainPanel.add(courseTypeComboBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        mainPanel.add(rankLabel, gbc);
+        mainPanel.add(unitsLabel, gbc);
 
         gbc.gridx = 1;
-        mainPanel.add(rankField, gbc);
+        mainPanel.add(unitsField, gbc);
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -618,30 +648,34 @@ public class Courses extends javax.swing.JPanel {
 
         // Submit button action
         submitButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            String fullName = fullNameField.getText().trim();
-            String userName = userNameField.getText().trim();
-            String userPassword = new String(passwordField.getPassword());
-            String rank = rankField.getText().trim();
+            String courseCode = courseCodeField.getText().trim();
+            String courseTitle = courseTitleField.getText().trim();
+            String courseType = (String) courseTypeComboBox.getSelectedItem();
+            String units = unitsField.getText().trim();
 
             // Validation
-            if (fullName.isEmpty() || userName.isEmpty() || userPassword.isEmpty() || rank.isEmpty()) {
+            if (courseCode.isEmpty() || courseTitle.isEmpty() || courseType.isEmpty() || units.isEmpty()) {
                 JOptionPane.showMessageDialog(dialog, "All fields are required!");
                 return;
             }
-
-//            if (Pattern.compile("\\d+").matcher(fullName).find()) {
-//                JOptionPane.showMessageDialog(dialog, "Full name should not contain numbers!");
-//                return;
-//            }
-
+            try {
+                float unitValue = Float.parseFloat(units);
+                if (unitValue <= 0) {
+                    JOptionPane.showMessageDialog(dialog, "Units must be a positive number!");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(dialog, "Units must be a valid number!");
+                return;
+            }
             // Adding to database
-            addCourseToDatabase(fullName, userName, userPassword, rank, "Basic");
+            addCourseToDatabase(courseCode, courseTitle, courseType, units);
 
             dialog.dispose();
 
             // Update table with the new user
             Database.initDatabase();
-            populateTableWithAccounts();
+            populateTableWithCourses();
         });
 
         // Cancel button
@@ -654,7 +688,7 @@ public class Courses extends javax.swing.JPanel {
     }
 
     private boolean courseExists(String courseCode) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        try (Connection connection = getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM courses WHERE course_code = ?");
             stmt.setString(1, courseCode);
             return stmt.executeQuery().next();
@@ -664,11 +698,22 @@ public class Courses extends javax.swing.JPanel {
         }
     }
 
-    private void populateTableWithAccounts() {
+    private boolean courseTitleExists(String courseTitle) {
+        try (Connection connection = getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM courses WHERE course_title = ?");
+            stmt.setString(1, courseTitle);
+            return stmt.executeQuery().next();
+        } catch (SQLException e) {
+            System.out.println("Error checking course title: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private void populateTableWithCourses() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear existing data in the table
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        try (Connection connection = getConnection()) {
             String query = "SELECT course_code, course_title, course_type, units FROM courses";
             PreparedStatement stmt = connection.prepareStatement(query);
             var resultSet = stmt.executeQuery();
@@ -687,22 +732,31 @@ public class Courses extends javax.swing.JPanel {
         }
     }
 
-    private void removeUserFromDatabase(String courseCode) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
-            String deleteQuery = "DELETE FROM courses WHERE courseCode = ?";
+    private void removeCourseFromDatabase(String courseCode) {
+        try (Connection connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+
+            String deleteQuery = "DELETE FROM courses WHERE course_code = ?";
             PreparedStatement statement = connection.prepareStatement(deleteQuery);
-            statement.setString(1, courseCode);
+            statement.setString(1, courseCode.trim());
             statement.executeUpdate();
 
-            // Refresh data after deletion
+            // Refresh the table after deletion
             Database.initDatabase();
-            populateTableWithAccounts(); // Update table with new data
+            populateTableWithCourses();
 
             System.out.println("Course: " + courseCode + " deleted from database.");
+            System.out.println("Deleting course_code: [" + courseCode + "]");
+
         } catch (SQLException e) {
             System.out.println("Error deleting course from database: " + e.getMessage());
             JOptionPane.showMessageDialog(this, "Error deleting course: " + e.getMessage());
         }
+    }
+
+    // Extract this to Database class
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

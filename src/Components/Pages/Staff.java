@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
 import Database.Database;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -20,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
@@ -325,7 +326,7 @@ public class Staff extends javax.swing.JPanel {
     }
 
     private void updateUserInDatabase(String fullName, String originalUserName, String newUserName, String rank) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        try (Connection connection = getConnection()) {
             // First check if the new username already exists (if it was changed)
             if (!originalUserName.equals(newUserName) && userExists(newUserName)) {
                 JOptionPane.showMessageDialog(this, "Username '" + newUserName + "' already exists!");
@@ -474,7 +475,14 @@ public class Staff extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear existing data
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        SearchBar.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                searchUsers();
+            }
+        });
+        
+        try (Connection connection = getConnection()) {
             String query = "SELECT full_name, rank, user_name FROM accounts WHERE full_name LIKE ? OR rank LIKE ? OR user_name LIKE ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             String wildcard = "%" + searchTerm + "%";
@@ -498,7 +506,7 @@ public class Staff extends javax.swing.JPanel {
     }//GEN-LAST:event_UpdateButtonActionPerformed
 
     private void addUserToDatabase(String fullName, String userName, String userPassword, String rank, String permissions) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        try (Connection connection = getConnection()) {
             if (permissions == null || permissions.isEmpty()) {
                 permissions = "user";
             }
@@ -660,7 +668,7 @@ public class Staff extends javax.swing.JPanel {
     }
 
     private boolean userExists(String userName) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        try (Connection connection = getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM accounts WHERE user_name = ?");
             stmt.setString(1, userName);
             return stmt.executeQuery().next();
@@ -674,7 +682,7 @@ public class Staff extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear existing data in the table
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        try (Connection connection = getConnection()) {
             String query = "SELECT full_name, rank, user_name FROM accounts";
             PreparedStatement stmt = connection.prepareStatement(query);
             var resultSet = stmt.executeQuery();
@@ -693,7 +701,7 @@ public class Staff extends javax.swing.JPanel {
     }
 
     private void removeUserFromDatabase(String userName) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "")) {
+        try (Connection connection = getConnection()) {
             String deleteQuery = "DELETE FROM accounts WHERE user_name = ?";
             PreparedStatement statement = connection.prepareStatement(deleteQuery);
             statement.setString(1, userName);
@@ -713,6 +721,10 @@ public class Staff extends javax.swing.JPanel {
     private double getAmount(int from, int to) {
         Random ran = new Random();
         return (ran.nextInt(to - from) + from) * ran.nextDouble();
+    }
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
