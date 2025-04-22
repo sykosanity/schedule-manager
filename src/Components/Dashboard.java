@@ -1,5 +1,6 @@
 package Components;
 
+import Components.Pages.Dashboard;
 import javax.swing.*;
 import java.awt.*;
 import java.net.*;
@@ -10,19 +11,24 @@ import javax.imageio.ImageIO;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import javax.swing.filechooser.FileSystemView;
+import java.awt.Dimension;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
-public class Dashboard extends javax.swing.JFrame {
+public class dashboard extends javax.swing.JFrame {
 
     public static String ImageURL = "https://cdn.discordapp.com/attachments/1286683285128216638/1356918173961687040/images.jpeg?ex=67ee5006&is=67ecfe86&hm=be42c32b864d5efaf49875d8e658a6c274501646112dbcef34cb96c074478a4d&";
 
-    public Dashboard() {
+    public dashboard() {
 
         initComponents();
 
         applyText();
-        Components.Pages.Dashboard dashboardSection = new Components.Pages.Dashboard();
-        dashboardSection.setBounds(0, 0, 1050, 720); // Set position & size
-        add(dashboardSection);  // Add the dashboard to the frame
         applyCustomComponents();
 
     }
@@ -236,7 +242,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(UIPaneLayout.createSequentialGroup()
                 .addGap(383, 383, 383)
                 .addComponent(jLabel1)
-                .addContainerGap(406, Short.MAX_VALUE))
+                .addContainerGap(387, Short.MAX_VALUE))
         );
         UIPaneLayout.setVerticalGroup(
             UIPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +259,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PanelPane, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(UIPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE))
+                .addComponent(UIPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

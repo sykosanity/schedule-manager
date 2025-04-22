@@ -4,6 +4,8 @@
  */
 package Components.Pages;
 
+import Components.ButtonInteractions.ButtonsEditor;
+import Components.ButtonInteractions.ButtonsRenderer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
@@ -41,12 +44,81 @@ public class Staff extends javax.swing.JPanel {
     public Staff() {
         initComponents();
         this.setPreferredSize(new Dimension(1050, 720));
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                if (value instanceof Boolean) {
+                    JCheckBox checkbox = new JCheckBox();
+                    checkbox.setSelected((Boolean) value);
+                    checkbox.setHorizontalAlignment(JLabel.CENTER);
+                    return checkbox;
+                }
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        });
         setupUIEnhancements();
         populateTableWithAccounts();
     }
 
+    private void customizeButtons() {
+
+//        URL imageUrl = getClass().getResource("/Assets/Icons/edit.png");
+//        if (imageUrl == null) {
+//            System.out.println("Image not found!");
+//        } else {
+//            ImageIcon icon = new ImageIcon(imageUrl);
+//        }
+        // Load and resize icons
+        ImageIcon deleteIcon = resizeIcon(new ImageIcon(getClass().getResource("/Assets/Icons/delete.png")), 25, 25);
+        ImageIcon editIcon = resizeIcon(new ImageIcon(getClass().getResource("/Assets/Icons/edit16.png")), 155, 150);
+
+        // Update icons and remove text if desired
+        DeleteButton.setIcon(deleteIcon);
+        DeleteButton.setText(""); // Remove text to show icon only
+
+        UpdateButton.setIcon(editIcon);
+        UpdateButton.setText(""); // Remove text to show icon only
+
+        // Make buttons square and properly sized
+        Dimension buttonSize = new Dimension(40, 40);
+        DeleteButton.setPreferredSize(buttonSize);
+        UpdateButton.setPreferredSize(buttonSize);
+
+        // Optional - create button with rounded corners
+        DeleteButton.setUI(new BasicButtonUI() {
+            @Override
+            public void update(Graphics g, JComponent c) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                AbstractButton button = (AbstractButton) c;
+                ButtonModel model = button.getModel();
+
+                int width = button.getWidth();
+                int height = button.getHeight();
+
+                if (model.isPressed()) {
+                    g2.setColor(button.getBackground().darker());
+                } else if (model.isRollover()) {
+                    g2.setColor(button.getBackground().brighter());
+                } else {
+                    g2.setColor(button.getBackground());
+                }
+
+                g2.fillRoundRect(0, 0, width, height, 10, 10);
+                g2.dispose();
+
+                super.update(g, c);
+            }
+        });
+
+        // Do the same for UpdateButton if desired
+        UpdateButton.setUI(new BasicButtonUI() {
+            // Same code as above
+        });
+    }
+
     private void setupUIEnhancements() {
-        // Enhance the JTable appearance
         jTable1.setRowHeight(30);
         jTable1.setShowGrid(false);
         jTable1.setIntercellSpacing(new Dimension(0, 0));
@@ -58,16 +130,28 @@ public class Staff extends javax.swing.JPanel {
         header.setFont(new Font("SansSerif", Font.BOLD, 12));
         header.setPreferredSize(new Dimension(header.getWidth(), 35));
 
+        // Add custom column for action buttons
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        // Change first column header from empty string to "Actions"
+        model.setColumnIdentifiers(new Object[]{"Select", "Name", "Rank", "User_name"});
+
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(80);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(300);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(100);
         // Add alternating row colors
         jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                if (!isSelected) {
-                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 240, 250));
-                } else {
-                    c.setBackground(new Color(173, 216, 230));
+                // Skip the first column which has our custom renderer
+                if (column != 0) {
+                    if (!isSelected) {
+                        c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 240, 250));
+                    } else {
+                        c.setBackground(new Color(173, 216, 230));
+                    }
                 }
 
                 return c;
@@ -109,10 +193,10 @@ public class Staff extends javax.swing.JPanel {
         ScrollPane = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         TabPanel = new raven.crazypanel.CrazyPanel();
-        AddButton = new javax.swing.JButton();
         UpdateButton = new javax.swing.JButton();
         DeleteButton = new javax.swing.JButton();
         SearchBar = new javax.swing.JTextField();
+        AddButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -156,40 +240,31 @@ public class Staff extends javax.swing.JPanel {
         TabPanel.setPreferredSize(new java.awt.Dimension(1019, 34));
         TabPanel.setLayout(null);
 
-        AddButton.setText("Add");
-        AddButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddButtonActionPerformed(evt);
-            }
-        });
-        TabPanel.add(AddButton);
-        AddButton.setBounds(680, 10, 90, 28);
-
         UpdateButton.setText("Update");
-        UpdateButton.setMaximumSize(new java.awt.Dimension(49, 28));
+        UpdateButton.setMaximumSize(new java.awt.Dimension(100, 100));
         UpdateButton.setMinimumSize(new java.awt.Dimension(49, 28));
         UpdateButton.setName(""); // NOI18N
-        UpdateButton.setPreferredSize(new java.awt.Dimension(49, 28));
+        UpdateButton.setPreferredSize(new java.awt.Dimension(49, 49));
         UpdateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 UpdateButtonActionPerformed(evt);
             }
         });
         TabPanel.add(UpdateButton);
-        UpdateButton.setBounds(780, 10, 90, 28);
+        UpdateButton.setBounds(780, 0, 90, 30);
 
         DeleteButton.setText("Delete");
-        DeleteButton.setMaximumSize(new java.awt.Dimension(49, 28));
-        DeleteButton.setMinimumSize(new java.awt.Dimension(49, 28));
+        DeleteButton.setMaximumSize(new java.awt.Dimension(100, 100));
+        DeleteButton.setMinimumSize(new java.awt.Dimension(49, 49));
         DeleteButton.setName(""); // NOI18N
-        DeleteButton.setPreferredSize(new java.awt.Dimension(49, 28));
+        DeleteButton.setPreferredSize(new java.awt.Dimension(49, 49));
         DeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DeleteButtonActionPerformed(evt);
             }
         });
         TabPanel.add(DeleteButton);
-        DeleteButton.setBounds(880, 10, 90, 28);
+        DeleteButton.setBounds(880, 0, 90, 30);
 
         SearchBar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,6 +273,18 @@ public class Staff extends javax.swing.JPanel {
         });
         TabPanel.add(SearchBar);
         SearchBar.setBounds(0, 10, 170, 28);
+
+        AddButton.setText("Add");
+        AddButton.setMaximumSize(new java.awt.Dimension(49, 49));
+        AddButton.setMinimumSize(new java.awt.Dimension(49, 49));
+        AddButton.setPreferredSize(new java.awt.Dimension(49, 49));
+        AddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddButtonActionPerformed(evt);
+            }
+        });
+        TabPanel.add(AddButton);
+        AddButton.setBounds(680, 0, 90, 30);
 
         MainPanel.add(TabPanel);
         TabPanel.setBounds(20, 90, 980, 40);
@@ -481,7 +568,7 @@ public class Staff extends javax.swing.JPanel {
                 searchUsers();
             }
         });
-        
+
         try (Connection connection = getConnection()) {
             String query = "SELECT full_name, rank, user_name FROM accounts WHERE full_name LIKE ? OR rank LIKE ? OR user_name LIKE ?";
             PreparedStatement stmt = connection.prepareStatement(query);
@@ -727,6 +814,11 @@ public class Staff extends javax.swing.JPanel {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "");
     }
 
+    private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddButton;
     private javax.swing.JButton DeleteButton;

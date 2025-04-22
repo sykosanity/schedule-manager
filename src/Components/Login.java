@@ -132,7 +132,7 @@ public class Login extends javax.swing.JFrame {
 
             HashMap<String, String> userDetails = getUserDetails(username);
 
-            new Dashboard().setVisible(true);
+            new dashboard().setVisible(true);
             if (userDetails != null) {
                 // close login 
                 this.dispose();
