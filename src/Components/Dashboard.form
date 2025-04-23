@@ -28,7 +28,7 @@
           <Group type="102" attributes="0">
               <Component id="PanelPane" min="-2" pref="250" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="UIPane" pref="1009" max="32767" attributes="0"/>
+              <Component id="UIPane" pref="1044" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -98,7 +98,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="390" width="250" height="40"/>
+              <AbsoluteConstraints x="0" y="360" width="250" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -168,7 +168,24 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="430" width="250" height="40"/>
+              <AbsoluteConstraints x="0" y="400" width="250" height="40"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JButton" name="ScheduleEditor">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Schedule Editor"/>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ScheduleEditorActionPerformed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="StaffButton.addMouseListener(new MouseAdapter() {&#xa;    @Override&#xa;public void mouseEntered(MouseEvent e) {&#xa;        StaffButton.setBackground(new Color(36,100,180)); // Hover color&#xa;    }&#xa;&#xa;    @Override&#xa;public void mouseExited(MouseEvent e) {&#xa;        StaffButton.setBackground(new Color(4,76,172)); // Reset to default&#xa;    }&#xa;});"/>
+          </AuxValues>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="0" y="440" width="250" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -260,7 +277,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="370" width="90" height="-1"/>
+              <AbsoluteConstraints x="0" y="340" width="90" height="-1"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -282,7 +299,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="383" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="387" max="32767" attributes="0"/>
+                  <EmptySpace pref="426" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

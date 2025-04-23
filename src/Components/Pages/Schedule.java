@@ -5,6 +5,17 @@
 package Components.Pages;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JButton;
 
 /**
  *
@@ -12,13 +23,25 @@ import java.awt.Dimension;
  */
 public class Schedule extends javax.swing.JPanel {
 
+    private JButton[] sectionButtons;
+
     public Schedule() {
         initComponents();
 
+        sectionButtons = new JButton[]{
+            Section1Button, Section2Button, Section3Button, Section4Button,
+            Section5Button, Section6Button, Section7Button, Section8Button,
+            Section9Button, Section10Button, Section11Button, Section12Button
+        };
+
+        for (JButton btn : sectionButtons) {
+            btn.setVisible(false); // Hide all buttons by default
+        }
+
+        getSections();
+
         setLayout(new java.awt.BorderLayout());
-
         this.setPreferredSize(new Dimension(1050, 0));
-
     }
 
     /**
@@ -31,6 +54,18 @@ public class Schedule extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
+        Section1Button = new javax.swing.JButton();
+        Section2Button = new javax.swing.JButton();
+        Section3Button = new javax.swing.JButton();
+        Section4Button = new javax.swing.JButton();
+        Section5Button = new javax.swing.JButton();
+        Section6Button = new javax.swing.JButton();
+        Section7Button = new javax.swing.JButton();
+        Section8Button = new javax.swing.JButton();
+        Section9Button = new javax.swing.JButton();
+        Section10Button = new javax.swing.JButton();
+        Section11Button = new javax.swing.JButton();
+        Section12Button = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(null);
@@ -40,10 +75,123 @@ public class Schedule extends javax.swing.JPanel {
         jLabel2.setText("THIS IS THE SCHEDULE SECTION");
         add(jLabel2);
         jLabel2.setBounds(335, 0, 383, 40);
+
+        Section1Button.setText("Section 1");
+        add(Section1Button);
+        Section1Button.setBounds(30, 50, 220, 100);
+
+        Section2Button.setText("Section 2");
+        add(Section2Button);
+        Section2Button.setBounds(290, 50, 220, 100);
+
+        Section3Button.setText("Section 3");
+        add(Section3Button);
+        Section3Button.setBounds(550, 50, 220, 100);
+
+        Section4Button.setText("Section 4");
+        Section4Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Section4ButtonActionPerformed(evt);
+            }
+        });
+        add(Section4Button);
+        Section4Button.setBounds(800, 50, 220, 100);
+
+        Section5Button.setText("Section 5");
+        add(Section5Button);
+        Section5Button.setBounds(30, 170, 220, 100);
+
+        Section6Button.setText("Section 6");
+        add(Section6Button);
+        Section6Button.setBounds(290, 170, 220, 100);
+
+        Section7Button.setText("Section 7");
+        add(Section7Button);
+        Section7Button.setBounds(550, 170, 220, 100);
+
+        Section8Button.setText("Section 8");
+        add(Section8Button);
+        Section8Button.setBounds(800, 170, 220, 100);
+
+        Section9Button.setText("Section 9");
+        add(Section9Button);
+        Section9Button.setBounds(30, 300, 220, 100);
+
+        Section10Button.setText("Section 10");
+        add(Section10Button);
+        Section10Button.setBounds(290, 300, 220, 100);
+
+        Section11Button.setText("Section 11");
+        add(Section11Button);
+        Section11Button.setBounds(550, 300, 220, 100);
+
+        Section12Button.setText("Section 12");
+        add(Section12Button);
+        Section12Button.setBounds(800, 300, 220, 100);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void Section4ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Section4ButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Section4ButtonActionPerformed
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "");
+    }
+
+    public final void getSections() {
+        System.out.println("Getting Sections From Database...");
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet schedulesRetval = statement.executeQuery("SELECT * FROM sections");
+
+            int index = 0; // array index for buttons
+
+            while (schedulesRetval.next() && index < sectionButtons.length) {
+                String section = schedulesRetval.getString("section_name");
+                String pName = schedulesRetval.getString("program_name");
+                String program = schedulesRetval.getString("program");
+
+                // Set button label and show it
+                sectionButtons[index].setText(section);
+                sectionButtons[index].setVisible(true);
+                
+                sectionButtons[index].addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        //your actions
+//                        System.out.println(e);
+                        System.out.println(section);
+                    }
+                });
+                System.out.println((index + 1) + ". " + section + " | " + pName + " | " + program);
+                index++;
+            }
+
+            System.out.println("Total sections pulled: " + index);
+            System.out.println("Database fetched schedules successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error " + e.getMessage());
+        }
+    }
+
+    public static void DisplaySections(String SectionName, String ProgramName, String Program, int Number) {
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Section10Button;
+    private javax.swing.JButton Section11Button;
+    private javax.swing.JButton Section12Button;
+    private javax.swing.JButton Section1Button;
+    private javax.swing.JButton Section2Button;
+    private javax.swing.JButton Section3Button;
+    private javax.swing.JButton Section4Button;
+    private javax.swing.JButton Section5Button;
+    private javax.swing.JButton Section6Button;
+    private javax.swing.JButton Section7Button;
+    private javax.swing.JButton Section8Button;
+    private javax.swing.JButton Section9Button;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }
