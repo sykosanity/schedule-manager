@@ -94,8 +94,12 @@ public class Login extends javax.swing.JFrame {
         LoginContainer.setBounds(500, 100, 270, 490);
 
         BGImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/Images/bgimage.png"))); // NOI18N
+        BGImage.setMaximumSize(new java.awt.Dimension(1300, 720));
+        BGImage.setMinimumSize(new java.awt.Dimension(1300, 720));
+        BGImage.setName(""); // NOI18N
         getContentPane().add(BGImage);
-        BGImage.setBounds(0, 0, 1280, 720);
+        BGImage.setBounds(10, 0, 1300, 720);
+        BGImage.getAccessibleContext().setAccessibleDescription("");
 
         pack();
         setLocationRelativeTo(null);

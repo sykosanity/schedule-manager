@@ -45,6 +45,7 @@ public class dashboard extends javax.swing.JFrame {
         SettingsOption = new javax.swing.JButton();
         FeedbackOption = new javax.swing.JButton();
         CoursesButton = new javax.swing.JButton();
+        ScheduleEditor = new javax.swing.JButton();
         PermissionText = new javax.swing.JLabel();
         ImageLabel = new javax.swing.JLabel();
         UserNameText = new javax.swing.JLabel();
@@ -119,7 +120,7 @@ public class dashboard extends javax.swing.JFrame {
                 StaffButton.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(StaffButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 390, 250, 40));
+        PanelPane.add(StaffButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 250, 40));
 
         LogOutOption.setText("Log out");
         LogOutOption.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -199,7 +200,27 @@ public class dashboard extends javax.swing.JFrame {
                 StaffButton.setBackground(new Color(4,76,172)); // Reset to default
             }
         });
-        PanelPane.add(CoursesButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 250, 40));
+        PanelPane.add(CoursesButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 400, 250, 40));
+
+        ScheduleEditor.setText("Schedule Editor");
+        ScheduleEditor.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        ScheduleEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ScheduleEditorActionPerformed(evt);
+            }
+        });
+        StaffButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                StaffButton.setBackground(new Color(36,100,180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                StaffButton.setBackground(new Color(4,76,172)); // Reset to default
+            }
+        });
+        PanelPane.add(ScheduleEditor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 440, 250, 40));
 
         PermissionText.setBackground(java.awt.Color.white);
         PermissionText.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -226,7 +247,7 @@ public class dashboard extends javax.swing.JFrame {
         AdminSectionLabel.setBackground(new java.awt.Color(255, 255, 255));
         AdminSectionLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         AdminSectionLabel.setText("  Admin");
-        PanelPane.add(AdminSectionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 90, -1));
+        PanelPane.add(AdminSectionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 90, -1));
 
         UIPane.setBackground(new java.awt.Color(255, 255, 255));
         UIPane.setPreferredSize(new java.awt.Dimension(1050, 0));
@@ -242,7 +263,7 @@ public class dashboard extends javax.swing.JFrame {
             .addGroup(UIPaneLayout.createSequentialGroup()
                 .addGap(383, 383, 383)
                 .addComponent(jLabel1)
-                .addContainerGap(387, Short.MAX_VALUE))
+                .addContainerGap(426, Short.MAX_VALUE))
         );
         UIPaneLayout.setVerticalGroup(
             UIPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,7 +280,7 @@ public class dashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PanelPane, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(UIPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE))
+                .addComponent(UIPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1044, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,6 +362,20 @@ public class dashboard extends javax.swing.JFrame {
 
     }//GEN-LAST:event_CoursesButtonActionPerformed
 
+    private void ScheduleEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ScheduleEditorActionPerformed
+
+        UIPane.removeAll();
+
+        Components.Pages.Schedule schedCreator = new Components.Pages.Schedule();
+
+        schedCreator.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
+
+        UIPane.add(schedCreator);
+        UIPane.revalidate();
+        UIPane.repaint();
+
+    }//GEN-LAST:event_ScheduleEditorActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -409,6 +444,7 @@ public class dashboard extends javax.swing.JFrame {
 
             StaffButton.setVisible(true); // Hide the button when the action is triggered
             CoursesButton.setVisible(true);
+            ScheduleEditor.setVisible(true);
             AdminSectionLabel.setVisible(true);
         } else {
             PermissionText.setText(userRank);
@@ -417,6 +453,7 @@ public class dashboard extends javax.swing.JFrame {
 
             StaffButton.setVisible(false); // Hide the button when the action is triggered
             CoursesButton.setVisible(false);
+            ScheduleEditor.setVisible(false);
             AdminSectionLabel.setVisible(false);
 
             System.out.println("USER");
@@ -471,6 +508,25 @@ public class dashboard extends javax.swing.JFrame {
                 CoursesButton.setBackground(new Color(4, 76, 172)); // Reset to default
             }
         });
+        
+        ScheduleEditor.setUI(new mdlaf.components.button.MaterialButtonUI());
+        ScheduleEditor.setBackground(new java.awt.Color(4, 76, 172)); // Blue
+        ScheduleEditor.setForeground(java.awt.Color.WHITE);
+        ScheduleEditor.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        ScheduleEditor.setBorderPainted(false);
+        ScheduleEditor.setFocusPainted(false);
+        ScheduleEditor.setOpaque(true);
+        ScheduleEditor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ScheduleEditor.setBackground(new Color(36, 100, 180)); // Hover color
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ScheduleEditor.setBackground(new Color(4, 76, 172)); // Reset to default
+            }
+        });
 
         SettingsOption.setUI(new mdlaf.components.button.MaterialButtonUI());
         SettingsOption.setBackground(new java.awt.Color(4, 76, 172)); // Blue
@@ -516,6 +572,7 @@ public class dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel OptionSectionLabel;
     private javax.swing.JPanel PanelPane;
     private javax.swing.JLabel PermissionText;
+    private javax.swing.JButton ScheduleEditor;
     private javax.swing.JButton ScheduleOption;
     private javax.swing.JButton SettingsOption;
     private javax.swing.JButton StaffButton;

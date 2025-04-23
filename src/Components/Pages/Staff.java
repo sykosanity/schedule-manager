@@ -272,7 +272,7 @@ public class Staff extends javax.swing.JPanel {
             }
         });
         TabPanel.add(SearchBar);
-        SearchBar.setBounds(0, 10, 170, 28);
+        SearchBar.setBounds(0, 10, 170, 26);
 
         AddButton.setText("Add");
         AddButton.setMaximumSize(new java.awt.Dimension(49, 49));
