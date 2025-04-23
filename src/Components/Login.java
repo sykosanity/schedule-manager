@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.event.KeyListener;
 
 public class Login extends javax.swing.JFrame {
 
@@ -245,7 +246,20 @@ public class Login extends javax.swing.JFrame {
                 + "iconTextGap:20;"
                 + "showRevealButton:true;");
         PasswordTxtField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Enter your password");
+        
+        // Enter key press event that triggers the login action
+        KeyListener enterKeyListener;
+        enterKeyListener = new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                    LoginButtonActionPerformed(null);
+                }
+            }
+        };
 
+    UsernameTxtField.addKeyListener(enterKeyListener);
+    PasswordTxtField.addKeyListener(enterKeyListener);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
