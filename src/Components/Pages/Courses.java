@@ -809,7 +809,7 @@ public class Courses extends javax.swing.JPanel {
         courseTitleField.setPreferredSize(new Dimension(200, 30));
 
         JLabel courseTypeLabel = new JLabel("Course Type:");
-        String[] courseTypes = {"Lab", "Lec", "Lab & Lec"};
+        String[] courseTypes = {"Lab", "Lec"};
         JComboBox<String> courseTypeComboBox = new JComboBox<>(courseTypes);
         courseTypeComboBox.setSelectedItem(courseType);
         courseTypeComboBox.setPreferredSize(new Dimension(200, 30));
