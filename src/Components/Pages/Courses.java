@@ -31,6 +31,8 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -667,7 +669,8 @@ public class Courses extends javax.swing.JPanel {
         model.setRowCount(0); // Clear existing data in the table
 
         try (Connection connection = getConnection()) {
-            String query = "SELECT course_code, course_title, course_type, units FROM courses";
+            // Modified query to select only distinct courses
+            String query = "SELECT DISTINCT course_code, course_title, course_type, units FROM courses";
             PreparedStatement stmt = connection.prepareStatement(query);
             var resultSet = stmt.executeQuery();
 
@@ -682,6 +685,28 @@ public class Courses extends javax.swing.JPanel {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error fetching courses: " + e.getMessage());
+        }
+    }
+
+    public void removeDupeCourses() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int rowCount = model.getRowCount();
+
+        Set<String> seenCourseCodes = new HashSet<>();
+        List<Integer> rowsToRemove = new ArrayList<>();
+
+        for (int i = rowCount - 1; i >= 0; i--) {
+            String courseCode = (String) model.getValueAt(i, 1);
+
+            if (seenCourseCodes.contains(courseCode)) {
+                rowsToRemove.add(i);
+            } else {
+                seenCourseCodes.add(courseCode);
+            }
+        }
+
+        for (int rowIndex : rowsToRemove) {
+            model.removeRow(rowIndex);
         }
     }
 
@@ -784,7 +809,7 @@ public class Courses extends javax.swing.JPanel {
         courseTitleField.setPreferredSize(new Dimension(200, 30));
 
         JLabel courseTypeLabel = new JLabel("Course Type:");
-        String[] courseTypes = {"Lab", "Lec"};
+        String[] courseTypes = {"Lab", "Lec", "Lab & Lec"};
         JComboBox<String> courseTypeComboBox = new JComboBox<>(courseTypes);
         courseTypeComboBox.setSelectedItem(courseType);
         courseTypeComboBox.setPreferredSize(new Dimension(200, 30));

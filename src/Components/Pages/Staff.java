@@ -251,7 +251,7 @@ public class Staff extends javax.swing.JPanel {
             }
         });
         TabPanel.add(UpdateButton);
-        UpdateButton.setBounds(780, 0, 90, 30);
+        UpdateButton.setBounds(780, 10, 90, 30);
 
         DeleteButton.setText("Delete");
         DeleteButton.setMaximumSize(new java.awt.Dimension(100, 100));
@@ -264,7 +264,7 @@ public class Staff extends javax.swing.JPanel {
             }
         });
         TabPanel.add(DeleteButton);
-        DeleteButton.setBounds(880, 0, 90, 30);
+        DeleteButton.setBounds(880, 10, 90, 30);
 
         SearchBar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -284,7 +284,7 @@ public class Staff extends javax.swing.JPanel {
             }
         });
         TabPanel.add(AddButton);
-        AddButton.setBounds(680, 0, 90, 30);
+        AddButton.setBounds(680, 10, 90, 30);
 
         MainPanel.add(TabPanel);
         TabPanel.setBounds(20, 90, 980, 40);
