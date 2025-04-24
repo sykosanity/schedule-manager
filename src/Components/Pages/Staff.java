@@ -4,7 +4,12 @@
  */
 package Components.Pages;
 
-import Components.ButtonInteractions.ButtonsEditor;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+import Components.ButtonInteractions.ButtonsEditorStaff;
 import Components.ButtonInteractions.ButtonsRenderer;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -44,6 +49,7 @@ public class Staff extends javax.swing.JPanel {
     public Staff() {
         initComponents();
         this.setPreferredSize(new Dimension(1050, 720));
+        UpdateButton.setVisible(false);
         jTable1.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -56,18 +62,13 @@ public class Staff extends javax.swing.JPanel {
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         });
+        customizeButtons();
+        setupSearchBarKeyListener();
         setupUIEnhancements();
         populateTableWithAccounts();
     }
 
     private void customizeButtons() {
-
-//        URL imageUrl = getClass().getResource("/Assets/Icons/edit.png");
-//        if (imageUrl == null) {
-//            System.out.println("Image not found!");
-//        } else {
-//            ImageIcon icon = new ImageIcon(imageUrl);
-//        }
         // Load and resize icons
         ImageIcon deleteIcon = resizeIcon(new ImageIcon(getClass().getResource("/Assets/Icons/delete.png")), 25, 25);
         ImageIcon editIcon = resizeIcon(new ImageIcon(getClass().getResource("/Assets/Icons/edit16.png")), 155, 150);
@@ -114,7 +115,30 @@ public class Staff extends javax.swing.JPanel {
 
         // Do the same for UpdateButton if desired
         UpdateButton.setUI(new BasicButtonUI() {
-            // Same code as above
+            @Override
+            public void update(Graphics g, JComponent c) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                AbstractButton button = (AbstractButton) c;
+                ButtonModel model = button.getModel();
+
+                int width = button.getWidth();
+                int height = button.getHeight();
+
+                if (model.isPressed()) {
+                    g2.setColor(button.getBackground().darker());
+                } else if (model.isRollover()) {
+                    g2.setColor(button.getBackground().brighter());
+                } else {
+                    g2.setColor(button.getBackground());
+                }
+
+                g2.fillRoundRect(0, 0, width, height, 10, 10);
+                g2.dispose();
+
+                super.update(g, c);
+            }
         });
     }
 
@@ -135,6 +159,8 @@ public class Staff extends javax.swing.JPanel {
         // Change first column header from empty string to "Actions"
         model.setColumnIdentifiers(new Object[]{"Select", "Name", "Rank", "User_name"});
 
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(new ButtonsRenderer());
+        jTable1.getColumnModel().getColumn(0).setCellEditor(new ButtonsEditorStaff(jTable1, this));
         jTable1.getColumnModel().getColumn(0).setMaxWidth(80);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(300);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -217,7 +243,7 @@ public class Staff extends javax.swing.JPanel {
                 java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                true, true, false, false
+                true, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -251,7 +277,7 @@ public class Staff extends javax.swing.JPanel {
             }
         });
         TabPanel.add(UpdateButton);
-        UpdateButton.setBounds(780, 10, 90, 30);
+        UpdateButton.setBounds(560, 10, 90, 30);
 
         DeleteButton.setText("Delete");
         DeleteButton.setMaximumSize(new java.awt.Dimension(100, 100));
@@ -272,7 +298,7 @@ public class Staff extends javax.swing.JPanel {
             }
         });
         TabPanel.add(SearchBar);
-        SearchBar.setBounds(0, 10, 170, 26);
+        SearchBar.setBounds(0, 10, 170, 28);
 
         AddButton.setText("Add");
         AddButton.setMaximumSize(new java.awt.Dimension(49, 49));
@@ -284,7 +310,7 @@ public class Staff extends javax.swing.JPanel {
             }
         });
         TabPanel.add(AddButton);
-        AddButton.setBounds(680, 10, 90, 30);
+        AddButton.setBounds(780, 10, 90, 30);
 
         MainPanel.add(TabPanel);
         TabPanel.setBounds(20, 90, 980, 40);
@@ -412,35 +438,44 @@ public class Staff extends javax.swing.JPanel {
         updateUserDialog(fullName, userName, rank);
     }
 
-    private void updateUserInDatabase(String fullName, String originalUserName, String newUserName, String rank) {
+    private void updateUserInDatabase(String originalUsername, String fullName, String newUsername, String rank) {
         try (Connection connection = getConnection()) {
-            // First check if the new username already exists (if it was changed)
-            if (!originalUserName.equals(newUserName) && userExists(newUserName)) {
-                JOptionPane.showMessageDialog(this, "Username '" + newUserName + "' already exists!");
-                return;
+            // Check if username is being changed to one that already exists
+            if (!originalUsername.equals(newUsername)) {
+                String checkQuery = "SELECT user_name FROM accounts WHERE user_name = ?";
+                try (PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
+                    checkStmt.setString(1, newUsername);
+                    if (checkStmt.executeQuery().next()) {
+                        showErrorMessage("Username already exists!");
+                        return;
+                    }
+                }
             }
 
+            // Update the user
             String updateQuery = "UPDATE accounts SET full_name = ?, user_name = ?, rank = ? WHERE user_name = ?";
-            PreparedStatement statement = connection.prepareStatement(updateQuery);
-            statement.setString(1, fullName);
-            statement.setString(2, newUserName);
-            statement.setString(3, rank);
-            statement.setString(4, originalUserName);
-            int rowsUpdated = statement.executeUpdate();
+            try (PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
+                stmt.setString(1, fullName);
+                stmt.setString(2, newUsername);
+                stmt.setString(3, rank);
+                stmt.setString(4, originalUsername);
 
-            if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(this, "User updated successfully.");
-                // Update the table after successful database update
-                populateTableWithAccounts();
-            } else {
-                JOptionPane.showMessageDialog(this, "No user found with that username.");
+                int rowsUpdated = stmt.executeUpdate();
+                if (rowsUpdated > 0) {
+                    showSuccessMessage("User updated successfully!");
+                    populateTableWithAccounts(); // Refresh the table
+                } else {
+                    showErrorMessage("No user found with username: " + originalUsername);
+                }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error updating user: " + e.getMessage());
+            showErrorMessage("Database error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private void updateUserDialog(String fullName, String userName, String rank) {
+    public void updateUserDialog(String fullName, String userName, String rank) {
+
         // Create a new dialog for updating user information
         JDialog updateDialog = new JDialog();
         updateDialog.setTitle("Update User");
@@ -522,32 +557,34 @@ public class Staff extends javax.swing.JPanel {
 
         // Handle the submit button click event
         submitButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 String newFullName = fullNameField.getText().trim();
                 String newUserName = userNameField.getText().trim();
                 String newRank = rankField.getText().trim();
 
-                // Check if any field is empty
+                // Input validation
                 if (newFullName.isEmpty() || newUserName.isEmpty() || newRank.isEmpty()) {
                     JOptionPane.showMessageDialog(updateDialog, "All fields are required!");
                     return;
                 }
 
-                if (Pattern.compile("\\d+").matcher(newFullName).find()) {
-                    JOptionPane.showMessageDialog(updateDialog, "Full name should not contain numbers!");
-                    return;
-                }
+                // Debug output
+                System.out.println("Attempting to update user:");
+                System.out.println("Original Username: " + userName);
+                System.out.println("New Full Name: " + newFullName);
+                System.out.println("New Username: " + newUserName);
+                System.out.println("New Rank: " + newRank);
 
-                // Update the user in the database
-                updateUserInDatabase(newFullName, originalUserName, newUserName, newRank);
-
-                // Close the dialog
+                // Update the user
+                updateUserInDatabase(userName, newFullName, newUserName, newRank);
                 updateDialog.dispose();
             }
         });
 
         // Handle the cancel button click event
         cancelButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 updateDialog.dispose();
             }
@@ -555,6 +592,7 @@ public class Staff extends javax.swing.JPanel {
 
         // Show the dialog
         updateDialog.setVisible(true);
+
     }
 
     private void searchUsers() {
@@ -562,15 +600,8 @@ public class Staff extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear existing data
 
-        SearchBar.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                searchUsers();
-            }
-        });
-
         try (Connection connection = getConnection()) {
-            String query = "SELECT full_name, rank, user_name FROM accounts WHERE full_name LIKE ? OR rank LIKE ? OR user_name LIKE ?";
+            String query = "SELECT user_name, full_name, rank FROM accounts WHERE user_name LIKE ? OR full_name LIKE ? OR rank LIKE ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             String wildcard = "%" + searchTerm + "%";
             stmt.setString(1, wildcard);
@@ -581,41 +612,65 @@ public class Staff extends javax.swing.JPanel {
 
             while (resultSet.next()) {
                 String fullName = resultSet.getString("full_name");
-                String rank = resultSet.getString("rank");
                 String userName = resultSet.getString("user_name");
+                String rank = resultSet.getString("rank");
 
                 // Add data to the table
-                model.addRow(new Object[]{false, fullName, rank, userName});
+                model.addRow(new Object[]{false, fullName, userName, rank});
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error searching accounts: " + e.getMessage());
         }
     }//GEN-LAST:event_UpdateButtonActionPerformed
 
+    private void setupSearchBarKeyListener() {
+        SearchBar.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                searchUsers();
+            }
+        });
+    }
+
     private void addUserToDatabase(String fullName, String userName, String userPassword, String rank, String permissions) {
+        if (!validateUserInput(fullName, userName, userPassword, rank)) {
+            return;
+        }
+
         try (Connection connection = getConnection()) {
+            // Set default permissions if not provided
             if (permissions == null || permissions.isEmpty()) {
                 permissions = "user";
             }
 
-            if (userExists(userName)) {
-                JOptionPane.showMessageDialog(dialog, "Username already exists!");
-                return;
+            // Check if username exists
+            String checkQuery = "SELECT user_name FROM accounts WHERE user_name = ?";
+            try (PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
+                checkStmt.setString(1, userName);
+                if (checkStmt.executeQuery().next()) {
+                    showErrorMessage("Username already exists");
+                    return;
+                }
             }
 
-            String insertQuery = "INSERT INTO accounts (user_name, user_password, full_name, rank) VALUES (?, ?, ?, ?)";
-            PreparedStatement statement = connection.prepareStatement(insertQuery);
-            statement.setString(1, userName);
-            statement.setString(2, userPassword);
-            statement.setString(3, fullName);
-            statement.setString(4, rank);
-            statement.executeUpdate();
+            // Insert new user
+            String insertQuery = "INSERT INTO accounts (user_name, user_password, full_name, rank, permissions) "
+                    + "VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+                statement.setString(1, userName);
+                statement.setString(2, userPassword); // Note: In production, this should be hashed
+                statement.setString(3, fullName);
+                statement.setString(4, rank);
+                statement.setString(5, permissions);
 
-            System.out.println("User " + userName + " added to database.");
-            JOptionPane.showMessageDialog(this, "User added successfully!");
+                if (statement.executeUpdate() > 0) {
+                    showSuccessMessage("User added successfully");
+                    populateTableWithAccounts();
+                }
+            }
         } catch (SQLException e) {
-            System.out.println("Error adding user to database: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error adding user: " + e.getMessage());
+            showErrorMessage("Database error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -718,96 +773,105 @@ public class Staff extends javax.swing.JPanel {
         dialog.setLocationRelativeTo(this);
 
         // Submit button action
-        submitButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            String fullName = fullNameField.getText().trim();
-            String userName = userNameField.getText().trim();
-            String userPassword = new String(passwordField.getPassword());
-            String rank = rankField.getText().trim();
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                String fullName = fullNameField.getText().trim();
+                String userName = userNameField.getText().trim();
+                String userPassword = new String(passwordField.getPassword()).trim();
+                String rank = rankField.getText().trim();
 
-            // Validation
-            if (fullName.isEmpty() || userName.isEmpty() || userPassword.isEmpty() || rank.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "All fields are required!");
-                return;
+                // Input validation
+                if (fullName.isEmpty() || userName.isEmpty() || userPassword.isEmpty() || rank.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "All fields are required!");
+                    return;
+                }
+
+                if (Pattern.compile("\\d+").matcher(fullName).find()) {
+                    JOptionPane.showMessageDialog(dialog, "Full name should not contain numbers!");
+                    return;
+                }
+
+                if (userPassword.length() < 6) {
+                    JOptionPane.showMessageDialog(dialog, "Password must be at least 6 characters long!");
+                    return;
+                }
+
+                // Add user to database
+                addUserToDatabase(fullName, userName, userPassword, rank, "user");
+
+                // Refresh the table
+                populateTableWithAccounts();
+
+                // Close the dialog
+                dialog.dispose();
             }
-
-            if (Pattern.compile("\\d+").matcher(fullName).find()) {
-                JOptionPane.showMessageDialog(dialog, "Full name should not contain numbers!");
-                return;
-            }
-
-            // Adding to database
-            addUserToDatabase(fullName, userName, userPassword, rank, "Basic");
-
-            dialog.dispose();
-
-            // Update table with the new user
-            Database.initDatabase();
-            populateTableWithAccounts();
         });
 
-        // Cancel button
-        cancelButton.addActionListener((java.awt.event.ActionEvent evt) -> {
-            dialog.dispose();
+        // Cancel button action
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                dialog.dispose();
+            }
         });
 
-        // Show dialog
         dialog.setVisible(true);
     }
 
-    private boolean userExists(String userName) {
-        try (Connection connection = getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM accounts WHERE user_name = ?");
-            stmt.setString(1, userName);
-            return stmt.executeQuery().next();
+//    private boolean userExists(String userName) {
+//        try (Connection connection = getConnection()) {
+//            String query = "SELECT user_name FROM accounts WHERE user_name = ?";
+//            PreparedStatement stmt = connection.prepareStatement(query);
+//            stmt.setString(1, userName);
+//            return stmt.executeQuery().next();
+//        } catch (SQLException e) {
+//            System.out.println("Error checking user existence: " + e.getMessage());
+//            return false;
+//        }
+//    }
+    public void removeUserFromDatabase(String userName) {
+        if (!confirmDelete("Are you sure you want to delete user '" + userName + "'?")) {
+            return;
+        }
+
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM accounts WHERE user_name = ?")) {
+
+            statement.setString(1, userName);
+            int rowsDeleted = statement.executeUpdate();
+
+            if (rowsDeleted > 0) {
+                showSuccessMessage("User deleted successfully");
+                populateTableWithAccounts();
+            } else {
+                showErrorMessage("No user found with username: " + userName);
+            }
         } catch (SQLException e) {
-            System.out.println("Error checking user: " + e.getMessage());
-            return false;
+            showErrorMessage("Error deleting user: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void populateTableWithAccounts() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Clear existing data in the table
+        model.setRowCount(0); // Clear table
 
-        try (Connection connection = getConnection()) {
-            String query = "SELECT full_name, rank, user_name FROM accounts";
-            PreparedStatement stmt = connection.prepareStatement(query);
-            var resultSet = stmt.executeQuery();
+        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(
+                "SELECT full_name, rank, user_name FROM accounts ORDER BY full_name"); ResultSet rs = stmt.executeQuery()) {
 
-            while (resultSet.next()) {
-                String fullName = resultSet.getString("full_name");
-                String rank = resultSet.getString("rank");
-                String userName = resultSet.getString("user_name");
-
-                // Add data to the table
-                model.addRow(new Object[]{false, fullName, rank, userName});
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    false, // Checkbox state
+                    rs.getString("full_name"),
+                    rs.getString("rank"),
+                    rs.getString("user_name")
+                });
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error fetching accounts: " + e.getMessage());
+            showErrorMessage("Error loading accounts: " + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    private void removeUserFromDatabase(String userName) {
-        try (Connection connection = getConnection()) {
-            String deleteQuery = "DELETE FROM accounts WHERE user_name = ?";
-            PreparedStatement statement = connection.prepareStatement(deleteQuery);
-            statement.setString(1, userName);
-            statement.executeUpdate();
-
-            // Refresh data after deletion
-            Database.initDatabase();
-            populateTableWithAccounts(); // Update table with new data
-
-            System.out.println("User " + userName + " deleted from database.");
-        } catch (SQLException e) {
-            System.out.println("Error deleting user from database: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error deleting user: " + e.getMessage());
-        }
-    }
-
-    private double getAmount(int from, int to) {
-        Random ran = new Random();
-        return (ran.nextInt(to - from) + from) * ran.nextDouble();
     }
 
     private Connection getConnection() throws SQLException {
@@ -819,6 +883,71 @@ public class Staff extends javax.swing.JPanel {
         Image resizedImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImage);
     }
+
+    private boolean validateUserInput(String fullName, String userName, String password, String rank) {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            showErrorMessage("Full name cannot be empty");
+            return false;
+        }
+
+        if (userName == null || userName.trim().isEmpty()) {
+            showErrorMessage("Username cannot be empty");
+            return false;
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+            showErrorMessage("Password cannot be empty");
+            return false;
+        }
+
+        if (rank == null || rank.trim().isEmpty()) {
+            showErrorMessage("Rank cannot be empty");
+            return false;
+        }
+
+        if (fullName.matches(".*\\d.*")) {
+            showErrorMessage("Full name cannot contain numbers");
+            return false;
+        }
+
+        if (!userName.matches("^[a-zA-Z0-9_]+$")) {
+            showErrorMessage("Username can only contain letters, numbers and underscores");
+            return false;
+        }
+
+        if (password.length() < 6) {
+            showErrorMessage("Password must be at least 6 characters long");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void showSuccessMessage(String message) {
+        JOptionPane.showMessageDialog(this,
+                message,
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this,
+                message,
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    private boolean confirmDelete(String message) {
+        int response = JOptionPane.showConfirmDialog(
+                this,
+                message,
+                "Confirm Deletion",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+        return response == JOptionPane.YES_OPTION;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddButton;
     private javax.swing.JButton DeleteButton;

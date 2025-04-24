@@ -1,6 +1,5 @@
 package Components;
 
-import Components.Pages.Dashboard;
 import javax.swing.*;
 import java.awt.*;
 import java.net.*;
@@ -20,11 +19,11 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class dashboard extends javax.swing.JFrame {
+public class Dashboard extends javax.swing.JFrame {
 
     public static String ImageURL = "https://cdn.discordapp.com/attachments/1286683285128216638/1356918173961687040/images.jpeg?ex=67ee5006&is=67ecfe86&hm=be42c32b864d5efaf49875d8e658a6c274501646112dbcef34cb96c074478a4d&";
 
-    public dashboard() {
+    public Dashboard() {
 
         initComponents();
 

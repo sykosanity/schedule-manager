@@ -1,6 +1,6 @@
 package Components.ButtonInteractions;
 
-import Components.Pages.Courses;
+import Components.Pages.Staff;
 import javax.swing.table.TableCellEditor;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JPanel;
@@ -21,7 +21,7 @@ import java.util.EventObject;
  * @author Admin
  */
 // Custom editor for the buttons column
-public class ButtonsEditor extends AbstractCellEditor implements TableCellEditor {
+public class ButtonsEditorStaff extends AbstractCellEditor implements TableCellEditor {
 
     private JPanel panel;
     private JCheckBox checkBox;
@@ -29,11 +29,11 @@ public class ButtonsEditor extends AbstractCellEditor implements TableCellEditor
     private JButton deleteButton;
     private JTable table;
     private boolean isEditing;
-    private Courses courses; // Reference to Courses instance
+    private Staff staff; // Reference to staff instance
 
-    public ButtonsEditor(JTable table, Courses courses) {
+    public ButtonsEditorStaff(JTable table, Staff courses) {
         this.table = table;
-        this.courses = courses; // Assign the Courses instance
+        this.staff = courses; // Assign the Courses instance
         panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
 
         editButton = new JButton();
@@ -59,13 +59,12 @@ public class ButtonsEditor extends AbstractCellEditor implements TableCellEditor
             int row = table.convertRowIndexToModel(table.getEditingRow());
             DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-            String courseCode = (String) model.getValueAt(row, 1);
-            String courseTitle = (String) model.getValueAt(row, 2);
-            String courseType = (String) model.getValueAt(row, 3);
-            String units = (String) model.getValueAt(row, 4);
+            String fullName = (String) model.getValueAt(row, 1);
+            String userName = (String) model.getValueAt(row, 2);
+            String rank = (String) model.getValueAt(row, 3);
 
             // Call the update method on the Courses instance
-            courses.updateCourseDialog(courseCode, courseTitle, courseType, units);
+            staff.updateUserDialog(fullName, userName, rank);
             fireEditingStopped();
         });
 
@@ -74,13 +73,13 @@ public class ButtonsEditor extends AbstractCellEditor implements TableCellEditor
             int row = table.convertRowIndexToModel(table.getEditingRow());
             DefaultTableModel model = (DefaultTableModel) table.getModel();
 
-            String courseCode = (String) model.getValueAt(row, 1);
-            String courseTitle = (String) model.getValueAt(row, 2); // Define courseTitle here
+            String userName = (String) model.getValueAt(row, 1);
+            String fullName = (String) model.getValueAt(row, 2); // Define courseTitle here
 
             // Confirm deletion dialog
             int response = JOptionPane.showConfirmDialog(
                     table,
-                    "Are you sure you want to delete the course: " + courseTitle + "?",
+                    "Are you sure you want to delete the course: " + fullName + "?",
                     "Confirm Deletion",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
@@ -88,7 +87,7 @@ public class ButtonsEditor extends AbstractCellEditor implements TableCellEditor
 
             if (response == JOptionPane.YES_OPTION) {
                 // Call the remove method on the Courses instance
-                courses.removeCourseFromDatabase(courseCode);
+                staff.removeUserFromDatabase(userName);
             }
 
             fireEditingStopped();
@@ -104,8 +103,21 @@ public class ButtonsEditor extends AbstractCellEditor implements TableCellEditor
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        checkBox.setSelected(value != null && (Boolean) value);
-        panel.setBackground(new Color(173, 216, 230)); // Selection color
+        if (isSelected) {
+            panel.setBackground(new Color(173, 216, 230)); // Selection color
+        } else {
+            panel.setBackground(Color.WHITE); // Default background
+        }
+
+        if (value instanceof Boolean) {
+            checkBox.setSelected((Boolean) value); // Handle Boolean for checkbox
+        } else if (value instanceof Integer) {
+            // Handle Integer values (0 or 1) for checkbox
+            checkBox.setSelected((Integer) value == 1);
+        } else {
+            checkBox.setSelected(false); // Default unchecked
+        }
+
         isEditing = true;
         return panel;
     }

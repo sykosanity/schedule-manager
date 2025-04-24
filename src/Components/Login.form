@@ -134,12 +134,6 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/Assets/Images/bgimage.png"/>
         </Property>
-        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[1300, 720]"/>
-        </Property>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[1300, 720]"/>
-        </Property>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>
       </Properties>
       <AccessibilityProperties>
@@ -147,7 +141,7 @@
       </AccessibilityProperties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="10" y="0" width="1300" height="720"/>
+          <AbsoluteConstraints x="0" y="0" width="1300" height="720"/>
         </Constraint>
       </Constraints>
     </Component>

@@ -55,12 +55,22 @@ public class ButtonsRenderer extends JPanel implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (isSelected) {
-            setBackground(new Color(173, 216, 230));
+            setBackground(new Color(173, 216, 230)); // Light blue
+            setForeground(Color.BLACK); // Ensure text/icons are visible
         } else {
             setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 240, 250));
+            setForeground(Color.BLACK); // Normal text color
         }
 
-        checkBox.setSelected(value != null && (Boolean) value);
+        // Check if the value is a Boolean before casting
+        if (value instanceof Boolean) {
+            checkBox.setSelected((Boolean) value);
+        } else {
+            // Handle the case where value is not a Boolean (e.g., Integer, String)
+            checkBox.setSelected(false);  // Or handle it as needed
+        }
+        System.out.println("Renderer value: " + value + " | Type: " + (value != null ? value.getClass().getSimpleName() : "null"));
+
         return this;
     }
 
