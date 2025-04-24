@@ -309,7 +309,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         UIPane.removeAll();
 
-        Components.Pages.Schedule sched = new Components.Pages.Schedule();
+        Components.Pages.Schedule sched = new Components.Pages.Schedule(this);
 
         sched.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
 
@@ -365,7 +365,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         UIPane.removeAll();
 
-        Components.Pages.Schedule schedCreator = new Components.Pages.Schedule();
+        Components.Pages.Schedule schedCreator = new Components.Pages.Schedule(this);
 
         schedCreator.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
 
@@ -374,6 +374,20 @@ public class Dashboard extends javax.swing.JFrame {
         UIPane.repaint();
 
     }//GEN-LAST:event_ScheduleEditorActionPerformed
+
+    public void OpenScheduleEditorPerSection() {
+        
+        UIPane.removeAll();
+
+        Components.Pages.ScheduleCreator schedCreator = new Components.Pages.ScheduleCreator();
+
+        schedCreator.setBounds(0, 0, UIPane.getWidth(), UIPane.getHeight());
+
+        UIPane.add(schedCreator);
+        UIPane.revalidate();
+        UIPane.repaint();
+        
+    }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -507,7 +521,7 @@ public class Dashboard extends javax.swing.JFrame {
                 CoursesButton.setBackground(new Color(4, 76, 172)); // Reset to default
             }
         });
-        
+
         ScheduleEditor.setUI(new mdlaf.components.button.MaterialButtonUI());
         ScheduleEditor.setBackground(new java.awt.Color(4, 76, 172)); // Blue
         ScheduleEditor.setForeground(java.awt.Color.WHITE);

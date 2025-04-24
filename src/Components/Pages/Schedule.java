@@ -1,31 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package Components.Pages;
 
+import Components.Dashboard;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Statement;
+import javax.swing.JButton;
+import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.JButton;
+import javax.swing.JPanel;
 
-/**
- *
- * @author USER
- */
 public class Schedule extends javax.swing.JPanel {
 
-    private JButton[] sectionButtons;
+    private final JButton[] sectionButtons;
+    private final Dashboard dashboard;
 
-    public Schedule() {
+    public Schedule(Dashboard dashboardInstance) {
+        System.out.println(dashboardInstance);
+        this.dashboard = dashboardInstance;
+
         initComponents();
 
         sectionButtons = new JButton[]{
@@ -77,6 +73,11 @@ public class Schedule extends javax.swing.JPanel {
         jLabel2.setBounds(335, 0, 383, 40);
 
         Section1Button.setText("Section 1");
+        Section1Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Section1ButtonActionPerformed(evt);
+            }
+        });
         add(Section1Button);
         Section1Button.setBounds(30, 50, 220, 100);
 
@@ -134,12 +135,17 @@ public class Schedule extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_Section4ButtonActionPerformed
 
+    private void Section1ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Section1ButtonActionPerformed
+
+
+    }//GEN-LAST:event_Section1ButtonActionPerformed
+
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "");
     }
 
     public final void getSections() {
-        System.out.println("Getting Sections From Database...");
+//        System.out.println("Getting Sections From Database...");
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet schedulesRetval = statement.executeQuery("SELECT * FROM sections");
@@ -154,29 +160,57 @@ public class Schedule extends javax.swing.JPanel {
                 // Set button label and show it
                 sectionButtons[index].setText(section);
                 sectionButtons[index].setVisible(true);
-                
+
                 sectionButtons[index].addActionListener(new ActionListener() {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        //your actions
-//                        System.out.println(e);
-                        System.out.println(section);
+//                        System.out.println(section);
+                        OpenSectionSchedule(section);
                     }
                 });
-                System.out.println((index + 1) + ". " + section + " | " + pName + " | " + program);
+//                System.out.println((index + 1) + ". " + section + " | " + pName + " | " + program);
                 index++;
             }
 
             System.out.println("Total sections pulled: " + index);
-            System.out.println("Database fetched schedules successfully!");
+//            System.out.println("Database fetched schedules successfully!");
         } catch (SQLException e) {
             System.out.println("Error " + e.getMessage());
         }
     }
 
-    public static void DisplaySections(String SectionName, String ProgramName, String Program, int Number) {
+    public void OpenSectionSchedule(String Section) {
+        System.out.println("OpenSectionSchedule");
+        try (Connection connection = getConnection()) {
+            String query = "SELECT * FROM schedule "
+                    + "WHERE section LIKE ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
 
+            stmt.setString(1, Section);
+
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                String courseCode = resultSet.getString("courseCode");
+
+                System.out.println(courseCode);
+                DisplaySections();
+                dashboard.OpenScheduleEditorPerSection();
+
+//                Components.Pages.ScheduleCreator SchedCreator = new Components.Pages.ScheduleCreator();
+//                setVisible(false);
+//                SchedCreator.setVisible(true);
+//                SchedCreator.setBounds(0, 0, 1044, 720);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error searching courses: " + e.getMessage());
+        }
+    }
+
+    public static void DisplaySections() {
+//       
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
