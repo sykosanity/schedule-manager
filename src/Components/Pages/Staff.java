@@ -16,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import Database.Database;
+import com.mysql.cj.jdbc.DatabaseMetaData;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -48,6 +49,7 @@ public class Staff extends javax.swing.JPanel {
      */
     public Staff() {
         initComponents();
+        debugColumnNames();
         this.setPreferredSize(new Dimension(1050, 720));
         UpdateButton.setVisible(false);
         jTable1.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
@@ -439,21 +441,53 @@ public class Staff extends javax.swing.JPanel {
     }
 
     private void updateUserInDatabase(String originalUsername, String fullName, String newUsername, String rank) {
+        originalUsername = originalUsername.trim();
+        newUsername = newUsername.trim();
+        fullName = fullName.trim();
+        rank = rank.trim();
+
+        System.out.println("Final update attempt with:");
+        System.out.println("Original: '" + originalUsername + "'");
+        System.out.println("New Name: '" + fullName + "'");
+        System.out.println("New Username: '" + newUsername + "'");
+        System.out.println("New Rank: '" + rank + "'");
+
         try (Connection connection = getConnection()) {
-            // Check if username is being changed to one that already exists
-            if (!originalUsername.equals(newUsername)) {
-                String checkQuery = "SELECT user_name FROM accounts WHERE user_name = ?";
-                try (PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
-                    checkStmt.setString(1, newUsername);
-                    if (checkStmt.executeQuery().next()) {
-                        showErrorMessage("Username already exists!");
-                        return;
+            // First verify the user exists with exact case
+            String verifyQuery = "SELECT user_name FROM accounts WHERE BINARY user_name = ?";
+            try (PreparedStatement verifyStmt = connection.prepareStatement(verifyQuery)) {
+                verifyStmt.setString(1, originalUsername);
+                ResultSet rs = verifyStmt.executeQuery();
+
+                if (!rs.next()) {
+                    showErrorMessage("No exact match found for: " + originalUsername);
+
+                    // Try to find similar usernames
+                    String similarQuery = "SELECT user_name FROM accounts WHERE user_name LIKE ?";
+                    try (PreparedStatement similarStmt = connection.prepareStatement(similarQuery)) {
+                        similarStmt.setString(1, "%" + originalUsername + "%");
+                        ResultSet similarRs = similarStmt.executeQuery();
+
+                        StringBuilder similarUsers = new StringBuilder("Similar usernames found:\n");
+                        boolean foundSimilar = false;
+                        while (similarRs.next()) {
+                            similarUsers.append("- ").append(similarRs.getString("user_name")).append("\n");
+                            foundSimilar = true;
+                        }
+
+                        if (foundSimilar) {
+                            showErrorMessage(similarUsers.toString());
+                        }
                     }
+                    return;
                 }
+
+                String actualUsername = rs.getString("user_name");
+                System.out.println("Found exact match: " + actualUsername);
             }
 
-            // Update the user
-            String updateQuery = "UPDATE accounts SET full_name = ?, user_name = ?, rank = ? WHERE user_name = ?";
+            // Proceed with update
+            String updateQuery = "UPDATE accounts SET full_name = ?, user_name = ?, rank = ? WHERE BINARY user_name = ?";
             try (PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
                 stmt.setString(1, fullName);
                 stmt.setString(2, newUsername);
@@ -463,9 +497,9 @@ public class Staff extends javax.swing.JPanel {
                 int rowsUpdated = stmt.executeUpdate();
                 if (rowsUpdated > 0) {
                     showSuccessMessage("User updated successfully!");
-                    populateTableWithAccounts(); // Refresh the table
+                    populateTableWithAccounts();
                 } else {
-                    showErrorMessage("No user found with username: " + originalUsername);
+                    showErrorMessage("Update failed - no rows affected");
                 }
             }
         } catch (SQLException e) {
@@ -568,6 +602,10 @@ public class Staff extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(updateDialog, "All fields are required!");
                     return;
                 }
+                // In your update method or dialog:
+                System.out.println("User exists in DB: " + verifyUserExists(userName));
+                System.out.println("Username length: " + userName.length());
+                System.out.println("Username chars: " + Arrays.toString(userName.toCharArray()));
 
                 // Debug output
                 System.out.println("Attempting to update user:");
@@ -857,25 +895,45 @@ public class Staff extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0); // Clear table
 
-        try (Connection connection = getConnection(); PreparedStatement stmt = connection.prepareStatement(
-                "SELECT full_name, rank, user_name FROM accounts ORDER BY full_name"); ResultSet rs = stmt.executeQuery()) {
+        try (Connection connection = getConnection(); Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery("SELECT uid, `user_name`, full_name, `rank` FROM accounts ORDER BY full_name")) {
 
+            System.out.println("Database contents:");
             while (rs.next()) {
+                String dbUsername = rs.getString("user_name");
+                System.out.println("User ID: " + rs.getInt("uid")
+                        + " | Name: " + rs.getString("full_name")
+                        + " | Username: " + dbUsername
+                        + " | Rank: " + rs.getString("rank"));
+
                 model.addRow(new Object[]{
-                    false, // Checkbox state
+                    false, // Checkbox
                     rs.getString("full_name"),
                     rs.getString("rank"),
-                    rs.getString("user_name")
+                    dbUsername
                 });
             }
         } catch (SQLException e) {
-            showErrorMessage("Error loading accounts: " + e.getMessage());
+            System.err.println("SQL Error Details:");
+            System.err.println("Message: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Vendor Code: " + e.getErrorCode());
+
+            showErrorMessage("Error loading accounts. Check console for details.");
             e.printStackTrace();
         }
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "");
+        String url = "jdbc:mysql://localhost:3306/schedule_manager_db";
+        Properties props = new Properties();
+        props.setProperty("user", "root");
+        props.setProperty("password", "");
+        props.setProperty("useSSL", "false");
+        props.setProperty("characterEncoding", "UTF-8");
+        props.setProperty("useUnicode", "true");
+        props.setProperty("connectionCollation", "utf8mb4_general_ci");
+
+        return DriverManager.getConnection(url, props);
     }
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
@@ -946,6 +1004,58 @@ public class Staff extends javax.swing.JPanel {
                 JOptionPane.WARNING_MESSAGE
         );
         return response == JOptionPane.YES_OPTION;
+    }
+
+    private boolean verifyUserExists(String username) {
+        try (Connection connection = getConnection()) {
+            // Try multiple approaches to find the user
+            String query = "SELECT user_name FROM accounts WHERE BINARY user_name = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setString(1, username.trim());
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    System.out.println("Found exact match for: " + username);
+                    return true;
+                }
+
+                // Try case-insensitive search
+                query = "SELECT user_name FROM accounts WHERE user_name LIKE ?";
+                try (PreparedStatement stmt2 = connection.prepareStatement(query)) {
+                    stmt2.setString(1, username.trim());
+                    rs = stmt2.executeQuery();
+                    if (rs.next()) {
+                        System.out.println("Found case-insensitive match for: " + username);
+                        System.out.println("Actual username in DB: " + rs.getString("user_name"));
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println("Verification error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private void debugColumnNames() {
+        try (Connection conn = getConnection()) {
+            DatabaseMetaData meta = (DatabaseMetaData) conn.getMetaData();
+            ResultSet columns = meta.getColumns(null, null, "accounts", null);
+
+            System.out.println("\nActual Columns in Accounts Table:");
+            System.out.println("--------------------------------");
+            while (columns.next()) {
+                System.out.println(
+                        "Name: " + columns.getString("COLUMN_NAME")
+                        + " | Type: " + columns.getString("TYPE_NAME")
+                        + " | Size: " + columns.getInt("COLUMN_SIZE")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
