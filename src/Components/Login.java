@@ -1,49 +1,27 @@
 package Components;
 
 import Database.Database;
-import java.awt.Color;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.text.DefaultHighlighter;
-import mdlaf.MaterialLookAndFeel;
-import mdlaf.themes.*;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.event.KeyListener;
 
 public class Login extends javax.swing.JFrame {
 
+    public static String USER_RANK;
+    public static String USER_PERMISSION;
+    public static String USER_FULL_NAME;
+    public static String USER_PROFILE_IMAGE;
+
     public Login() {
+
         System.out.println("Initiated Login");
         initComponents();
         SetDefault();
         applyCustomComponents();
 
-        UsernameTxtField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (UsernameTxtField.getText().equals("Enter Username/Id")) {
-                    UsernameTxtField.setText("");
-                }
-            }
-
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (UsernameTxtField.getText().isEmpty()) {
-                    UsernameTxtField.setText("Enter Username/Id");
-                }
-            }
-        });
-
-        PasswordTxtField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (new String(PasswordTxtField.getPassword()).equals("Enter Password")) {
-                    PasswordTxtField.setText("");
-                }
-            }
-
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (new String(PasswordTxtField.getPassword()).isEmpty()) {
-                    PasswordTxtField.setText("Enter Password");
-                }
-            }
-        });
     }
 
     public void SetDefault() {
@@ -64,6 +42,8 @@ public class Login extends javax.swing.JFrame {
         BGImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        setOpacity(0.95F);
         getContentPane().setLayout(null);
 
         LoginContainer.setBackground(new java.awt.Color(255, 255, 255, 220));
@@ -77,7 +57,6 @@ public class Login extends javax.swing.JFrame {
         LoginLogo.setBounds(30, 10, 210, 90);
 
         UsernameTxtField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        UsernameTxtField.setText("Enter Username/Id");
         UsernameTxtField.setSelectionColor(new java.awt.Color(4, 75, 172));
         UsernameTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,7 +82,6 @@ public class Login extends javax.swing.JFrame {
         LoginContainer.add(LoginButton);
         LoginButton.setBounds(30, 260, 210, 40);
 
-        PasswordTxtField.setText("Password");
         PasswordTxtField.setSelectionColor(new java.awt.Color(4, 75, 172));
         PasswordTxtField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -117,8 +95,10 @@ public class Login extends javax.swing.JFrame {
         LoginContainer.setBounds(500, 100, 270, 490);
 
         BGImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/Images/bgimage.png"))); // NOI18N
+        BGImage.setName(""); // NOI18N
         getContentPane().add(BGImage);
-        BGImage.setBounds(0, 0, 1280, 720);
+        BGImage.setBounds(0, 0, 1300, 720);
+        BGImage.getAccessibleContext().setAccessibleDescription("");
 
         pack();
         setLocationRelativeTo(null);
@@ -131,10 +111,18 @@ public class Login extends javax.swing.JFrame {
 
         // innput validation
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter both username and password",
-                    "Login Error",
-                    JOptionPane.ERROR_MESSAGE);
+
+            UIManager.put("Button.focusPainted", false); // Disable focus ring
+            UIManager.put("OptionPane.background", new java.awt.Color(255, 255, 255)); // Light gray background
+            UIManager.put("Panel.background", new java.awt.Color(255, 255, 255)); // Panel background
+            UIManager.put("OptionPane.messageForeground", new java.awt.Color(0, 0, 0)); // Black text
+            UIManager.put("Button.background", new java.awt.Color(33, 150, 243)); // Blue button
+            UIManager.put("Button.foreground", java.awt.Color.WHITE); // White text on button
+            UIManager.put("Button.borderPainted", false);
+            UIManager.put("Button.focusPainted", false);
+            UIManager.put("Button.font", new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+
+            JOptionPane.showMessageDialog(this, "Please enter both username and password", "Login Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -143,9 +131,11 @@ public class Login extends javax.swing.JFrame {
         boolean loginSuccessful = validateLogin(username, password);
 
         if (loginSuccessful) {
-            // find users
+            this.dispose();
+
             HashMap<String, String> userDetails = getUserDetails(username);
 
+            new Dashboard().setVisible(true);
             if (userDetails != null) {
                 // close login 
                 this.dispose();
@@ -159,12 +149,13 @@ public class Login extends javax.swing.JFrame {
                     "Invalid username or password",
                     "Login Error",
                     JOptionPane.ERROR_MESSAGE);
+            return;
         }
     }//GEN-LAST:event_LoginButtonActionPerformed
 
     private boolean validateLogin(String username, String password) {
 
-        List<HashMap<String, String>> accounts = Database.getDatabase();
+        List<HashMap<String, String>> accounts = Database.getAccounts();
 
         for (HashMap<String, String> account : accounts) {
 
@@ -172,21 +163,25 @@ public class Login extends javax.swing.JFrame {
 
                 System.out.println("ENTERED NAME: " + username);
                 System.out.println("ENTERED PASSWORD: " + password);
-
-                System.out.println(account.get("user_name"));
-                System.out.println(account.get("user_password"));
+                System.out.println("RANK: " + account.get("rank"));
+                System.out.println("PERMISSION: " + account.get("permissions"));
 
                 if (account.get("user_name").equals(username) && account.get("user_password").equals(password)) {
+                    USER_PERMISSION = account.get("permissions");
+                    USER_FULL_NAME = account.get("full_name");
+                    USER_PROFILE_IMAGE = account.get("imageDir");
+                    USER_RANK = account.get("rank");
                     return true; // Login success
                 }
             }
         }
         return false; // Login failure
+
     }
 
     // user details
     private HashMap<String, String> getUserDetails(String username) {
-        List<HashMap<String, String>> accounts = Database.getDatabase();
+        List<HashMap<String, String>> accounts = Database.getAccounts();
 
         for (HashMap<String, String> account : accounts) {
             if (account.get("user_name").equals(username)) {
@@ -206,11 +201,18 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_PasswordTxtFieldActionPerformed
 
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf()); // Apply FlatLaf
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize FlatLaf");
+        }
+
         java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
     }
 
     public void applyCustomComponents() {
-        // Example: Customizing the JButton after NetBeans-generated code
+
+        // Example: Customizing the UI after NetBeans-generated code
         LoginButton.setUI(new mdlaf.components.button.MaterialButtonUI());
         LoginButton.setBackground(new java.awt.Color(33, 150, 243)); // Blue
         LoginButton.setForeground(java.awt.Color.WHITE);
@@ -220,12 +222,16 @@ public class Login extends javax.swing.JFrame {
         LoginButton.setOpaque(true);
 
         UsernameTxtField.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)); // Custom font
-        UsernameTxtField.setForeground(new java.awt.Color(0, 0, 0)); 
+        UsernameTxtField.setForeground(new java.awt.Color(0, 0, 0));
         UsernameTxtField.setBackground(new java.awt.Color(230, 230, 230)); // Light gray background
         UsernameTxtField.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(4, 75, 172)));
-        UsernameTxtField.setCaretColor(new java.awt.Color(0, 0, 0)); 
+        UsernameTxtField.setCaretColor(new java.awt.Color(0, 0, 0));
         UsernameTxtField.setHorizontalAlignment(javax.swing.JTextField.CENTER); // Center text
         UsernameTxtField.setOpaque(true);
+        UsernameTxtField.putClientProperty(FlatClientProperties.STYLE, ""
+                + "iconTextGap:10;");
+        UsernameTxtField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Enter your email");
+        UsernameTxtField.putClientProperty("JTextField.placeholderText", "Enter Username");
 
         PasswordTxtField.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14)); // Custom font
         PasswordTxtField.setForeground(new java.awt.Color(0, 0, 0)); // Blue text color
@@ -234,7 +240,24 @@ public class Login extends javax.swing.JFrame {
         PasswordTxtField.setCaretColor(new java.awt.Color(0, 0, 0)); // Blue cursor
         PasswordTxtField.setHorizontalAlignment(javax.swing.JTextField.CENTER); // Center text
         PasswordTxtField.setOpaque(true);
+        PasswordTxtField.putClientProperty(FlatClientProperties.STYLE, ""
+                + "iconTextGap:20;"
+                + "showRevealButton:true;");
+        PasswordTxtField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Enter your password");
+        
+        // Enter key press event that triggers the login action
+        KeyListener enterKeyListener;
+        enterKeyListener = new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                    LoginButtonActionPerformed(null);
+                }
+            }
+        };
 
+    UsernameTxtField.addKeyListener(enterKeyListener);
+    PasswordTxtField.addKeyListener(enterKeyListener);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

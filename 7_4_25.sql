@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               10.4.32-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.10.0.7000
+-- HeidiSQL Version:             12.8.0.6908
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -26,36 +26,36 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `user_password` longtext DEFAULT NULL,
   `full_name` longtext DEFAULT NULL,
   `rank` longtext DEFAULT NULL,
-  `permissions` longtext DEFAULT 'user',
+  `permissions` int(11) DEFAULT NULL,
+  `imageDir` longtext DEFAULT 'C:\\\\Users\\\\USER\\\\Desktop\\\\schedule-manager\\\\src\\\\Assets\\\\Images\\\\Users',
   PRIMARY KEY (`uid`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table schedule_manager_db.accounts: ~3 rows (approximately)
-INSERT INTO `accounts` (`uid`, `user_name`, `user_password`, `full_name`, `rank`, `permissions`) VALUES
-	(1, 'Bien', '12345', 'Bien Niño Enric N. Iligan', 'Dean', 'user'),
-	(2, 'Keegan', '12345', 'Keegan Jeoff G. Liboon', 'Professor', 'user'),
-	(3, 'JB', '12345', 'John Benedict B. Bancruz', 'Teacher', 'user'),
-	(15, 'tester', 'test', 'test update', 'tester1', 'Basic');
+INSERT INTO `accounts` (`uid`, `user_name`, `user_password`, `full_name`, `rank`, `permissions`, `imageDir`) VALUES
+	(1, 'Bien', '12345', 'Bien Niño Enric N. Iligan', 'Dean', 2, 'C:\\\\Users\\\\USER\\\\Desktop\\\\schedule-manager\\\\src\\\\Assets\\\\Images\\\\Users'),
+	(2, 'Keegan', '12345', 'Keegan Jeoff G. Liboon', 'Professor', 2, 'C:\\\\Users\\\\USER\\\\Desktop\\\\schedule-manager\\\\src\\\\Assets\\\\Images\\\\Users'),
+	(3, 'JB', '12345', 'John Benedict B. Bancruz', 'Teacher', 2, 'C:\\\\Users\\\\USER\\\\Desktop\\\\schedule-manager\\\\src\\\\Assets\\\\Images\\\\Users');
 
 -- Dumping structure for table schedule_manager_db.courses
 CREATE TABLE IF NOT EXISTS `courses` (
-  `course_code` longtext DEFAULT NULL,
-  `course_title` longtext DEFAULT NULL,
-  `course_type` longtext DEFAULT NULL,
-  `units` double NOT NULL DEFAULT 0
+  `course` int(11) DEFAULT NULL,
+  `title` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table schedule_manager_db.courses: ~8 rows (approximately)
-INSERT INTO `courses` (`course_code`, `course_title`, `course_type`, `units`) VALUES
-	('CC003.23', 'Computer Programming 2', 'Lab', 1),
-	('CC005.23', 'Computer Systems Operation & Maintenance', 'Lab', 1),
-	('CC004.23', 'Visual Design & Motion Graphics', 'Lab', 1),
-	('CC003.23', 'Computer Programming 2', 'Lec', 2),
-	('CC004.23', 'Visual Desgin & Motion Graphics', 'Lec', 2),
-	('CC005.23', 'Computer Systems Operation & Maintenance', 'Lec', 2),
-	('CS002.23', 'Discrete Structures 2', 'Lec', 3),
-	('GEC001.23', 'Purposive Communication', 'Lec', 3);
+-- Dumping data for table schedule_manager_db.courses: ~0 rows (approximately)
+
+-- Dumping structure for table schedule_manager_db.staff
+CREATE TABLE IF NOT EXISTS `staff` (
+  `staff_id` int(11) DEFAULT NULL,
+  `full_name` longtext DEFAULT NULL,
+  `rank` longtext DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table schedule_manager_db.staff: ~1 rows (approximately)
+INSERT INTO `staff` (`staff_id`, `full_name`, `rank`) VALUES
+	(0, 'Bien Niño Enric N. Iligan', 'Dean');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
