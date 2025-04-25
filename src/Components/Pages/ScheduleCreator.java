@@ -4,7 +4,9 @@
  */
 package Components.Pages;
 
+import static Components.Pages.Schedule.DisplaySections;
 import static Database.Database.dbAccounts;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,7 +22,7 @@ import javax.swing.JOptionPane;
  * @author USER
  */
 public final class ScheduleCreator extends javax.swing.JPanel {
-
+    
     /**
      * Creates new form ScheduleCreator
      */
@@ -29,6 +31,7 @@ public final class ScheduleCreator extends javax.swing.JPanel {
         initComponents();
         this.setPreferredSize(new Dimension(1050, 720));
         getSchedule();
+        Override();
     }
 
     /**
@@ -71,14 +74,14 @@ public final class ScheduleCreator extends javax.swing.JPanel {
         TimeFrame4 = new Components.Cell.Cell();
         TimeCellRow1_4 = new Components.Cell.Cell();
         TimeCellRow2_4 = new Components.Cell.Cell();
-        TimeCellRow3_4 = new Components.Cell.Cell();
         TimeCellRow4_4 = new Components.Cell.Cell();
         TimeCellRow5_4 = new Components.Cell.Cell();
         TimeCellRow6_4 = new Components.Cell.Cell();
+        TimeCellRow7_4 = new Components.Cell.Cell();
         TimeFrame5 = new Components.Cell.Cell();
-        TimeCellRow1_5 = new Components.Cell.Cell();
         TimeCellRow2_5 = new Components.Cell.Cell();
         TimeCellRow3_5 = new Components.Cell.Cell();
+        TimeCellRow3_4 = new Components.Cell.Cell();
         TimeCellRow4_5 = new Components.Cell.Cell();
         TimeCellRow5_5 = new Components.Cell.Cell();
         TimeCellRow6_5 = new Components.Cell.Cell();
@@ -343,9 +346,6 @@ public final class ScheduleCreator extends javax.swing.JPanel {
         TimeCellRow2_4.setBorder(new javax.swing.border.MatteBorder(null));
         add(TimeCellRow2_4);
 
-        TimeCellRow3_4.setBorder(new javax.swing.border.MatteBorder(null));
-        add(TimeCellRow3_4);
-
         TimeCellRow4_4.setBorder(new javax.swing.border.MatteBorder(null));
         add(TimeCellRow4_4);
 
@@ -355,18 +355,26 @@ public final class ScheduleCreator extends javax.swing.JPanel {
         TimeCellRow6_4.setBorder(new javax.swing.border.MatteBorder(null));
         add(TimeCellRow6_4);
 
+        TimeCellRow7_4.setBorder(new javax.swing.border.MatteBorder(null));
+        TimeCellRow7_4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TimeCellRow7_4ActionPerformed(evt);
+            }
+        });
+        add(TimeCellRow7_4);
+
         TimeFrame5.setBorder(new javax.swing.border.MatteBorder(null));
         TimeFrame5.setText("09:30 - 10:00");
         add(TimeFrame5);
-
-        TimeCellRow1_5.setBorder(new javax.swing.border.MatteBorder(null));
-        add(TimeCellRow1_5);
 
         TimeCellRow2_5.setBorder(new javax.swing.border.MatteBorder(null));
         add(TimeCellRow2_5);
 
         TimeCellRow3_5.setBorder(new javax.swing.border.MatteBorder(null));
         add(TimeCellRow3_5);
+
+        TimeCellRow3_4.setBorder(new javax.swing.border.MatteBorder(null));
+        add(TimeCellRow3_4);
 
         TimeCellRow4_5.setBorder(new javax.swing.border.MatteBorder(null));
         add(TimeCellRow4_5);
@@ -829,31 +837,89 @@ public final class ScheduleCreator extends javax.swing.JPanel {
     private void TimeCellRow5_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TimeCellRow5_2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TimeCellRow5_2ActionPerformed
-    
+
+    private void TimeCellRow7_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TimeCellRow7_4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TimeCellRow7_4ActionPerformed
+
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/schedule_manager_db", "root", "");
     }
 
     public void getSchedule() {
-        System.out.println("Getting Schedule From Database...");
+//        System.out.println("Getting Schedule From Database...");
         try (Connection connection = getConnection()) {
-          
+
             Statement statement = connection.createStatement();
             ResultSet schedulesRetval = statement.executeQuery("SELECT * FROM schedule");
-
 
             while (schedulesRetval.next()) {
                 String sRoom = schedulesRetval.getString("room_id");
                 String sTime = schedulesRetval.getString("time");
                 String sEmployeeId = schedulesRetval.getString("employee_id");
                 String sDay = schedulesRetval.getString("day");
-                System.out.println(sRoom + " | " + sTime + " | " + sEmployeeId +  " | " + sDay);
+//                System.out.println(sRoom + " | " + sTime + " | " + sEmployeeId + " | " + sDay);
             }
 
-           
             System.out.println("Database fetched schedules successfully!");
         } catch (SQLException e) {
             System.out.println("Error " + e.getMessage());
+        }
+    }
+
+    public void Override() {
+           
+    }
+
+    public void DisplaySchedule(String Section) {
+        try (Connection connection = getConnection()) {
+            String query = "SELECT * FROM schedule "
+                    + "WHERE section LIKE ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.setString(1, Section);
+
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                String courseCode = resultSet.getString("courseCode");
+                String section = resultSet.getString("section");
+                String time = resultSet.getString("time");
+                String day = resultSet.getString("day");
+                System.out.println(courseCode + " | " + section + " | " + time + " | " + day);
+
+
+                if (resultSet.getString("day").equals("Monday")) {
+                    System.out.println("Today is monday!");
+                    TimeCellRow1_1.setBackground(Color.BLACK);
+                }
+
+                if (resultSet.getString("day").equals("Tuesday")) {
+                    System.out.println("Today is tuesday!");
+                    TimeCellRow2_1.setBackground(Color.RED);
+                }
+
+                if (resultSet.getString("day").equals("Wednesday")) {
+                    System.out.println("Today is wednesday!");
+                }
+
+                if (resultSet.getString("day").equals("Thursday")) {
+                    System.out.println("Today is thursday!");
+                }
+
+                if (resultSet.getString("day").equals("Friday")) {
+                    System.out.println("Today is friday!");
+                    TimeCellRow5_1.setBackground(Color.YELLOW);
+                }
+
+                if (resultSet.getString("day").equals("Saturday")) {
+                    System.out.println("Today is saturday!");
+                }
+
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error searching courses: " + e.getMessage());
         }
     }
 
@@ -883,7 +949,6 @@ public final class ScheduleCreator extends javax.swing.JPanel {
     private Components.Cell.Cell TimeCellRow1_25;
     private Components.Cell.Cell TimeCellRow1_3;
     private Components.Cell.Cell TimeCellRow1_4;
-    private Components.Cell.Cell TimeCellRow1_5;
     private Components.Cell.Cell TimeCellRow1_6;
     private Components.Cell.Cell TimeCellRow1_7;
     private Components.Cell.Cell TimeCellRow1_8;
@@ -1013,6 +1078,7 @@ public final class ScheduleCreator extends javax.swing.JPanel {
     private Components.Cell.Cell TimeCellRow6_7;
     private Components.Cell.Cell TimeCellRow6_8;
     private Components.Cell.Cell TimeCellRow6_9;
+    private Components.Cell.Cell TimeCellRow7_4;
     private Components.Cell.Cell TimeFrame1;
     private Components.Cell.Cell TimeFrame10;
     private Components.Cell.Cell TimeFrame11;

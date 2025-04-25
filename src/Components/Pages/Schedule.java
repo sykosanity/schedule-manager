@@ -165,15 +165,13 @@ public class Schedule extends javax.swing.JPanel {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-//                        System.out.println(section);
                         OpenSectionSchedule(section);
                     }
                 });
-//                System.out.println((index + 1) + ". " + section + " | " + pName + " | " + program);
                 index++;
             }
 
-            System.out.println("Total sections pulled: " + index);
+//            System.out.println("Total sections pulled: " + index);
 //            System.out.println("Database fetched schedules successfully!");
         } catch (SQLException e) {
             System.out.println("Error " + e.getMessage());
@@ -181,7 +179,7 @@ public class Schedule extends javax.swing.JPanel {
     }
 
     public void OpenSectionSchedule(String Section) {
-        System.out.println("OpenSectionSchedule");
+//        System.out.println("OpenSectionSchedule");
         try (Connection connection = getConnection()) {
             String query = "SELECT * FROM schedule "
                     + "WHERE section LIKE ?";
@@ -193,15 +191,14 @@ public class Schedule extends javax.swing.JPanel {
 
             while (resultSet.next()) {
                 String courseCode = resultSet.getString("courseCode");
+                String section = resultSet.getString("section");
+                String time = resultSet.getString("time");
+                String day = resultSet.getString("day");
 
-                System.out.println(courseCode);
+//                System.out.println(courseCode);
                 DisplaySections();
                 dashboard.OpenScheduleEditorPerSection();
-
-//                Components.Pages.ScheduleCreator SchedCreator = new Components.Pages.ScheduleCreator();
-//                setVisible(false);
-//                SchedCreator.setVisible(true);
-//                SchedCreator.setBounds(0, 0, 1044, 720);
+                new ScheduleCreator().DisplaySchedule(section);
             }
 
         } catch (SQLException e) {

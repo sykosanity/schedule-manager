@@ -392,15 +392,15 @@ public class Courses extends javax.swing.JPanel {
 
     private void addCourseToDatabase(String courseCode, String courseTitle, String courseType, String courseUnits) {
         try (Connection connection = getConnection()) {
-            if (courseExists(courseCode)) {
-                JOptionPane.showMessageDialog(dialog, "Course already exists!");
-                return;
-            }
+//            if (courseExists(courseCode)) {
+//                JOptionPane.showMessageDialog(dialog, "Course already exists!");
+//                return;
+//            }
 
-            if (courseTitleExists(courseTitle)) {
-                JOptionPane.showMessageDialog(dialog, "Course With this Title already exists!");
-                return;
-            }
+//            if (courseTitleExists(courseTitle)) {
+//                JOptionPane.showMessageDialog(dialog, "Course With this Title already exists!");
+//                return;
+//            }
 
             String insertQuery = "INSERT INTO courses (course_code, course_title, course_type, units) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(insertQuery);
@@ -765,7 +765,7 @@ public class Courses extends javax.swing.JPanel {
         JComboBox<String> courseTypeComboBox = new JComboBox<>(courseTypes);
         courseTypeComboBox.setSelectedItem(courseType);
         courseTypeComboBox.setPreferredSize(new Dimension(200, 30));
-        courseTypeComboBox.setEnabled(false);
+        courseTypeComboBox.setEnabled(true);
 
         JLabel unitsLabel = new JLabel("Units:");
         JTextField unitsField = new JTextField(units);
